@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>面试评估 - 洞若观合</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#0FC6C2',
+                        accent: '#722ED1',
+                        dark: '#1D2129',
+                        'dark-light': '#4E5969',
+                        'light-gray': '#C9CDD4',
+                        'ultra-light': '#F2F3F5',
+                        'red-500': '#EF4444',
+                        'red-600': '#DC2626',
+                        'primary-dark': '#0F48D6'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 20px rgba(0, 0, 0, 0.08)',
+                        'card-hover': '0 10px 30px rgba(22, 93, 255, 0.12)',
+                    }
+                },
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .bg-gradient-tech {
+                background: linear-gradient(135deg, #165DFF 0%, #722ED1 100%);
+            }
+            .clip-path-slant {
+                clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            }
+            .animate-pulse-slow {
+                animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            }
+            .glass-effect {
+                backdrop-filter: blur(12px);
+                background-color: rgba(255, 255, 255, 0.8);
+            }
+            .bg-pattern {
+                background-image: 
+                    radial-gradient(rgba(22, 93, 255, 0.05) 1px, transparent 1px),
+                    radial-gradient(rgba(114, 46, 209, 0.05) 1px, transparent 1px);
+                background-size: 50px 50px;
+                background-position: 0 0, 25px 25px;
+            }
+            .bg-grid {
+                background-image: 
+                    linear-gradient(rgba(22, 93, 255, 0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(22, 93, 255, 0.03) 1px, transparent 1px);
+                background-size: 20px 20px;
+            }
+            .bg-card-pattern {
+                background-image: 
+                    radial-gradient(rgba(22, 93, 255, 0.03) 1px, transparent 1px);
+                background-size: 15px 15px;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-ultra-light text-dark min-h-screen flex flex-col relative overflow-x-hidden">
+    <!-- 背景装饰元素 -->
+    <div class="fixed inset-0 bg-pattern bg-grid opacity-80 z-0 pointer-events-none"></div>
+    <div class="fixed top-0 right-0 w-1/3 h-1/3 bg-primary/5 rounded-full -mr-20 -mt-20 blur-3xl z-0 pointer-events-none"></div>
+    <div class="fixed bottom-0 left-0 w-1/4 h-1/4 bg-accent/5 rounded-full -ml-20 -mb-20 blur-3xl z-0 pointer-events-none"></div>
+    <!-- 网格线条装饰 -->
+    <div class="fixed top-1/4 left-0 w-full h-px bg-primary/10 z-0 pointer-events-none"></div>
+    <div class="fixed top-2/4 left-0 w-full h-px bg-primary/10 z-0 pointer-events-none"></div>
+    <div class="fixed top-3/4 left-0 w-full h-px bg-primary/10 z-0 pointer-events-none"></div>
+    <div class="fixed top-0 left-1/4 w-px h-full bg-primary/10 z-0 pointer-events-none"></div>
+    <div class="fixed top-0 left-2/4 w-px h-full bg-primary/10 z-0 pointer-events-none"></div>
+    <div class="fixed top-0 left-3/4 w-px h-full bg-primary/10 z-0 pointer-events-none"></div>
+    
+    <nav class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center"> 
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fa fa-robot text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-primary">洞若观合 —— 多模态 AI 面试评测系统</span>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="dashboard.html"
+                            class="border-transparent text-dark-light hover:text-dark hover:border-light-gray border-b-2 px-1 pt-1 inline-flex items-center text-sm font-medium">
+                            <i class="fa fa-home mr-1"></i>
+                            <span>首页</span>
+                        </a>
+                        <a href="interview.html"
+                            class="border-primary text-dark border-b-2 px-1 pt-1 inline-flex items-center text-sm font-medium">
+                            <i class="fa fa-video-camera mr-1"></i>
+                            <span>面试评估</span>
+                        </a>
+                        <a href="reports.html"
+                            class="border-transparent text-dark-light hover:text-dark hover:border-light-gray border-b-2 px-1 pt-1 inline-flex items-center text-sm font-medium">
+                            <i class="fa fa-file-text-o mr-1"></i>
+                            <span>报告中心</span>
+                        </a>
+                        <a href="history.html"
+                            class="border-transparent text-dark-light hover:text-dark hover:border-light-gray border-b-2 px-1 pt-1 inline-flex items-center text-sm font-medium">
+                            <i class="fa fa-history mr-1"></i>
+                            <span>历史记录</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <button type="button"
+                        class="p-2 rounded-full text-dark-light hover:text-dark hover:bg-ultra-light focus:outline-none">
+                        <i class="fa fa-bell-o"></i>
+                    </button>
+                    <div class="ml-4 flex items-center">
+                        <div
+                            class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <a href="user-profile.html"
+                        	class="ml-2 text-sm font-medium text-dark-light hidden sm:block transition-colors duration-300 group-hover:text-primary">用户信息</a>
+                        <button type="button"
+                            class="ml-1 p-2 rounded-full text-dark-light hover:text-dark hover:bg-ultra-light focus:outline-none">
+                            <i class="fa fa-angle-down"></i>
+                        </button>
+                    </div>
+                    <button type="button"
+                        class="ml-4 p-2 rounded-md text-dark-light hover:text-dark hover:bg-ultra-light focus:outline-none sm:hidden">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow relative z-10">
+        <!-- 初始页面：面试提示在左，面试设置在右 -->
+        <section id="initial-view" class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+            <div class="mb-12 text-center relative">
+                <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 w-20 h-20 bg-primary/10 rounded-full -z-10"></div>
+                <h1 class="text-[clamp(1.5rem,3vw,2.2rem)] font-bold text-dark mb-2">AI面试评估</h1>
+                <p class="text-dark-light max-w-2xl mx-auto">设置您的面试参数，获取个性化的面试体验和专业评估</p>
+            </div>
+
+            <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-8">
+                <!-- 面试提示（左侧） -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-card p-6 h-full relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-full -mr-16 -mt-16"></div>
+                        <div class="absolute inset-0 bg-card-pattern opacity-50 pointer-events-none"></div>
+                        
+                        <h2 class="text-xl font-bold text-dark mb-4 relative z-10">面试提示</h2>
+                        <div class="space-y-6 relative z-10">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 mt-1 bg-primary/10 p-2 rounded-full">
+                                    <i class="fa fa-lightbulb-o text-primary"></i>
+                                </div>
+                                <p class="ml-3 text-sm text-dark-light">确保您的网络连接稳定，以获得最佳体验</p>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 mt-1 bg-primary/10 p-2 rounded-full">
+                                    <i class="fa fa-lightbulb-o text-primary"></i>
+                                </div>
+                                <p class="ml-3 text-sm text-dark-light">选择光线充足的环境进行面试</p>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 mt-1 bg-primary/10 p-2 rounded-full">
+                                    <i class="fa fa-lightbulb-o text-primary"></i>
+                                </div>
+                                <p class="ml-3 text-sm text-dark-light">使用外部麦克风以获得更好的音频质量</p>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 mt-1 bg-primary/10 p-2 rounded-full">
+                                    <i class="fa fa-lightbulb-o text-primary"></i>
+                                </div>
+                                <p class="ml-3 text-sm text-dark-light">提前准备好您的简历和相关材料</p>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 mt-1 bg-primary/10 p-2 rounded-full">
+                                    <i class="fa fa-lightbulb-o text-primary"></i>
+                                </div>
+                                <p class="ml-3 text-sm text-dark-light">保持良好的姿势和眼神交流</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 面试设置（右侧） -->
+                <div class="lg:col-span-3" id="interview-settings">
+                    <div class="bg-white rounded-xl shadow-card p-8 relative overflow-hidden">
+                        <!-- 卡片装饰元素 -->
+                        <div class="absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-full -mr-20 -mt-20"></div>
+                        <div class="absolute bottom-0 left-0 w-32 h-32 bg-accent/5 rounded-full -ml-16 -mb-16"></div>
+                        <div class="absolute inset-0 bg-card-pattern opacity-50 pointer-events-none"></div>
+                        
+                        <h2 class="text-xl font-bold text-dark mb-6 text-center relative z-10">面试设置</h2>
+
+                        <div class="space-y-6 relative z-10">
+                            <div>
+                                <label for="interview-type" class="block text-sm font-medium text-dark-light mb-1">面试类型</label>
+                                <select id="interview-type"
+                                    class="w-full rounded-lg border border-light-gray px-4 py-3 focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all">
+                                    <option value="technical">技术面试</option>
+                                    <option value="hr">HR面试</option>
+                                    <option value="behavioral">行为面试</option>
+                                    <option value="case">案例面试</option>
+                                    <option value="group">小组面试</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="position-type" class="block text-sm font-medium text-dark-light mb-1">职位类型</label>
+                                <select id="position-type"
+                                    class="w-full rounded-lg border border-light-gray px-4 py-3 focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all">
+                                    <option value="python_engineer">python开发</option>
+                                    <option value="data_analyst">数据分析师</option>
+                                    <option value="product">产品经理</option>
+                                    <option value="design">UI/UX设计</option>
+                                    <option value="marketing">市场营销</option>
+                                    <option value="hr">人力资源</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="interview-duration" class="block text-sm font-medium text-dark-light mb-1">面试时长（分钟）</label>
+                                <select id="interview-duration"
+                                    class="w-full rounded-lg border border-light-gray px-4 py-3 focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="45">45</option>
+                                    <option value="60">60</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-dark-light mb-2">评估维度</label> 
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <div class="flex items-center">
+                                        <input id="dimension-1" type="checkbox" checked
+                                            class="h-4 w-4 text-primary focus:ring-primary border-light-gray rounded">
+                                        <label for="dimension-1"
+                                            class="ml-2 block text-sm text-dark-light">语言表达</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="dimension-2" type="checkbox" checked
+                                            class="h-4 w-4 text-primary focus:ring-primary border-light-gray rounded">
+                                        <label for="dimension-2"
+                                            class="ml-2 block text-sm text-dark-light">肢体语言</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="dimension-3" type="checkbox" checked
+                                            class="h-4 w-4 text-primary focus:ring-primary border-light-gray rounded">
+                                        <label for="dimension-3"
+                                            class="ml-2 block text-sm text-dark-light">回答质量</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="dimension-4" type="checkbox" checked
+                                            class="h-4 w-4 text-primary focus:ring-primary border-light-gray rounded">
+                                        <label for="dimension-4"
+                                            class="ml-2 block text-sm text-dark-light">专业知识</label>
+                                    </div>
+                                    <div class="flex items-center sm:col-span-2">
+                                        <input id="dimension-5" type="checkbox" checked
+                                            class="h-4 w-4 text-primary focus:ring-primary border-light-gray rounded">
+                                        <label for="dimension-5"
+                                            class="ml-2 block text-sm text-dark-light">沟通技巧</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-8 relative z-10"> 
+                            <button id="start-interview-btn" 
+                                    class="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2">
+                                    开始正式面试
+                                </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 面试页面：显示题目和录制界面 -->
+        <section id="interview-view" class="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full hidden">
+            <div class="mb-8 relative">
+                <div class="absolute -top-6 left-0 w-16 h-16 bg-primary/10 rounded-full -z-10"></div>
+                <h1 class="text-[clamp(1.5rem,3vw,2.2rem)] font-bold text-dark mb-2">面试评估</h1>
+                <p class="text-dark-light">请回答以下问题，完成后提交获取评估报告</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2">
+                    <div id="questions-container" class="bg-white rounded-xl shadow-card p-6 mb-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-full -mr-20 -mt-20"></div>
+                        <div class="absolute inset-0 bg-card-pattern opacity-50 pointer-events-none"></div>
+                        
+                        <h2 class="text-xl font-bold text-dark mb-4 relative z-10">面试问题</h2>
+                        <div id="question-content" class="text-dark-light text-base leading-relaxed relative z-10">
+                            <p>正在生成面试问题...</p>
+                        </div>
+                        <div id="question-audio-player" class="mt-4 hidden relative z-10">
+                            <audio controls class="w-full">
+                                <source src="" type="audio/wav">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-card p-6 relative overflow-hidden">
+                        <div class="absolute bottom-0 right-0 w-60 h-60 bg-accent/5 rounded-full -mr-30 -mb-30"></div>
+                        <div class="absolute inset-0 bg-card-pattern opacity-50 pointer-events-none"></div>
+                        
+                        <h2 class="text-xl font-bold text-dark mb-4 relative z-10">视频录制与上传</h2>
+
+                        <div class="bg-ultra-light rounded-lg p-6 mb-6 relative z-10">
+                            <div
+                                class="aspect-video bg-dark rounded-lg mb-4 flex items-center justify-center relative overflow-hidden">
+                                <video id="preview-video" class="w-full h-full object-cover" autoplay muted
+                                    playsinline></video>
+                                <div id="video-placeholder"
+                                    class="absolute inset-0 flex flex-col items-center justify-center bg-dark/50">
+                                    <i class="fa fa-video-camera text-white text-5xl mb-4"></i>
+                                    <p class="text-white text-lg">准备录制</p>
+                                </div>
+                                <div id="recording-indicator" class="absolute top-4 left-4 hidden items-center space-x-2 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                                    <span class="relative flex h-2 w-2">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                                    </span>
+                                    <span>录制中...</span>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap justify-center gap-4">
+                                <button id="start-record-btn"
+                                    class="px-6 py-3 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center">
+                                    <i class="fa fa-circle mr-2"></i> 开始录制
+                                </button>
+                                <button id="stop-record-btn"
+                                    class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center hidden">
+                                    <i class="fa fa-stop mr-2"></i> 停止录制
+                                </button>
+                                <button id="upload-video-btn"
+                                    class="px-6 py-3 bg-white border border-light-gray hover:bg-ultra-light text-dark font-medium rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center">
+                                    <i class="fa fa-upload mr-2"></i> 上传视频
+                                </button>
+                                <input type="file" id="video-file-input" accept="video/*" class="hidden">
+                            </div>
+                        </div>
+
+                        <div id="video-processing" class="hidden mb-6 bg-ultra-light rounded-lg p-6 relative z-10">
+                            <h3 class="text-lg font-medium text-dark mb-4">视频处理中</h3>
+                            <div class="w-full bg-light-gray rounded-full h-2.5 mb-2">
+                                <div id="progress-bar" class="bg-primary h-2.5 rounded-full" style="width: 0%">
+                                </div>
+                            </div>
+                            <p class="text-sm text-dark-light">正在处理视频...</p>
+                            <div class="mt-4 flex items-center text-sm">
+                                <div class="flex-shrink-0 mr-2">
+                                    <div
+                                        class="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-primary opacity-75">
+                                    </div>
+                                    <div class="relative inline-flex rounded-full h-3 w-3 bg-primary">
+                                    </div>
+                                </div>
+                                <p id="processing-status">正在准备上传...</p>
+                            </div>
+                        </div>
+
+                        <div id="video-controls" class="hidden mb-6 bg-ultra-light rounded-lg p-6 relative z-10">
+                            <h3 class="text-lg font-medium text-dark mb-4">已选择视频</h3>
+                            <div class="aspect-video bg-dark rounded-lg mb-4">
+                                <video id="recorded-video" class="w-full h-full object-cover" controls></video>
+                            </div>
+                            <div class="flex flex-wrap justify-center gap-4">
+                                <button id="play-video-btn"
+                                    class="px-6 py-3 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center">
+                                    <i class="fa fa-play mr-2"></i> 播放
+                                </button>
+                                <button id="submit-video-btn"
+                                    class="px-6 py-3 bg-accent hover:bg-accent/90 text-white font-medium rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center">
+                                    <i class="fa fa-paper-plane mr-2"></i> 提交评估
+                                </button>
+                                <button id="retry-record-btn"
+                                    class="px-6 py-3 bg-white border border-light-gray hover:bg-ultra-light text-dark font-medium rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center">
+                                    <i class="fa fa-refresh mr-2"></i> 重新选择
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="bg-white rounded-xl shadow-card p-6 sticky top-24 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-32 h-32 bg-primary/5 rounded-full -ml-16 -mt-16"></div>
+                        <div class="absolute inset-0 bg-card-pattern opacity-50 pointer-events-none"></div>
+                        
+                        <h2 class="text-xl font-bold text-dark mb-4 relative z-10">面试信息</h2>
+                        
+                        <div class="space-y-4 mb-6 relative z-10">
+                            <div>
+                                <p class="text-sm text-dark-light">面试类型</p>
+                                <p class="font-medium" id="summary-interview-type">技术面试</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-dark-light">职位类型</p>
+                                <p class="font-medium" id="summary-position-type">python开发</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-dark-light">预计时长</p>
+                                <p class="font-medium" id="summary-duration">15分钟</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-dark-light">评估维度</p>
+                                <div class="flex flex-wrap gap-2 mt-1" id="summary-dimensions">
+                                    <span class="px-2 py-1 bg-ultra-light text-dark-light text-xs rounded-full">语言表达</span>
+                                    <span class="px-2 py-1 bg-ultra-light text-dark-light text-xs rounded-full">肢体语言</span>
+                                    <span class="px-2 py-1 bg-ultra-light text-dark-light text-xs rounded-full">回答质量</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button id="back-to-settings-btn"
+                            class="w-full py-3 border border-light-gray text-dark-light hover:bg-ultra-light font-medium rounded-lg transition-colors relative z-10">
+                            返回设置
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white/80 backdrop-blur-md border-t border-light-gray relative z-10">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <i class="fa fa-robot text-primary text-2xl mr-2"></i>
+                    <span class="text-xl font-bold text-primary">洞若观合 —— 多模态 AI 面试评测系统</span>
+                </div>
+                <div class="flex flex-wrap justify-center text-sm text-dark-light">
+                    <p>© 2025 洞若观合 —— 多模态 AI 面试评测系统  | SZIIT . 保留所有权利.</p>
+                    <div class="ml-0 md:ml-4 mt-2 md:mt-0 space-x-4"> 
+                        <a href="#" class="hover:text-primary">隐私政策</a>
+                        <a href="#" class="hover:text-primary">服务条款</a>
+                        <a href="#" class="hover:text-primary">帮助中心</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/ui/js/auth_check.js"></script>
+		<script src="js/interview.js"></script>
+	</body>
+</html>
+    

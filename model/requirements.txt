@@ -1,0 +1,27 @@
+# ==========================================================
+#                  Environment Requirements (代码如果需要GPU加速，环境配置要按照下面的cuda版本， python版本进行配置。关于gpu版本pytorch的环境配置，网上能找到很多教程)
+# ==========================================================
+# Python version: ~=3.10  (Compatible with 3.10.x)
+# CUDA version:   11.8
+#
+# IMPORTANT: PyTorch, Torchvision, and Torchaudio must be
+# installed separately using the official command to ensure
+# compatibility with the specified CUDA version.
+# See README.md for the exact command.
+# ==========================================================
+
+# packages requirement
+torch == 2.7.1
+torchaudio == 2.7.1
+torchvision == 0.22.1
+tqdm == 4.67.1
+transformers == 4.53.2
+librosa == 0.11.0
+numpy == 2.2.4
+pandas == 2.2.3
+decord == 0.6.0
+
+# 环境配置好后，直接运行modelTrain.py即可。dataset中的数据已删除，需要自行补充，label.csv要严格按照我给到的格式
+
+
+

@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>个人资料 - 洞若观合</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		<script>
+			tailwind.config = {
+				theme: {
+					extend: {
+						colors: {
+							primary: '#165DFF',
+							secondary: '#0FC6C2',
+							accent: '#722ED1',
+							dark: '#1D2129',
+							'dark-light': '#4E5969',
+							'light-gray': '#C9CDD4',
+							'ultra-light': '#F2F3F5'
+						},
+						fontFamily: {
+							inter: ['Inter', 'system-ui', 'sans-serif'],
+						},
+						boxShadow: {
+							'card': '0 4px 20px rgba(0, 0, 0, 0.08)',
+							'card-hover': '0 10px 30px rgba(22, 93, 255, 0.15)',
+							'float': '0 15px 35px rgba(22, 93, 255, 0.1)',
+						},
+						animation: {
+							'fade-in': 'fadeIn 0.5s ease-in-out',
+							'slide-up': 'slideUp 0.4s ease-out',
+							'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+							'float': 'float 6s ease-in-out infinite',
+							'float-delay': 'float 6s ease-in-out 2s infinite',
+							'shine': 'shine 2s ease-in-out infinite',
+						},
+						keyframes: {
+							fadeIn: {
+								'0%': { opacity: '0' },
+								'100%': { opacity: '1' },
+							},
+							slideUp: {
+								'0%': { transform: 'translateY(10px)', opacity: '0' },
+								'100%': { transform: 'translateY(0)', opacity: '1' },
+							},
+							float: {
+								'0%, 100%': { transform: 'translateY(0)' },
+								'50%': { transform: 'translateY(-15px)' },
+							},
+							shine: {
+								'0%, 100%': { opacity: 0.6 },
+								'50%': { opacity: 1 },
+							}
+						}
+					},
+				}
+			}
+		</script>
+		<style type="text/tailwindcss">
+			@layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .bg-gradient-tech {
+                background: linear-gradient(135deg, #165DFF 0%, #722ED1 100%);
+            }
+            .glass-effect {
+                backdrop-filter: blur(12px);
+                background-color: rgba(255, 255, 255, 0.8);
+            }
+            .bg-grid {
+                background-size: 40px 40px;
+                background-image: 
+                    linear-gradient(to right, rgba(22, 93, 255, 0.05) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(22, 93, 255, 0.05) 1px, transparent 1px);
+            }
+            .nav-item {
+                position: relative;
+                transition: all 0.3s ease;
+            }
+            .nav-item::after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                bottom: -4px;
+                left: 0;
+                background-color: theme('colors.primary');
+                transition: width 0.3s ease;
+            }
+            .nav-item:hover::after {
+                width: 100%;
+            }
+            .btn-effect {
+                transition: all 0.2s ease;
+                position: relative;
+                overflow: hidden;
+            }
+            .btn-effect::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 300%;
+                height: 300%;
+                background: rgba(255, 255, 255, 0.15);
+                transform: translate(-50%, -50%) rotate(45deg);
+                transition: all 0.75s ease;
+            }
+            .btn-effect:hover::before {
+                width: 0;
+                height: 0;
+            }
+            .profile-tab {
+                transition: all 0.3s ease;
+            }
+            .profile-tab.active {
+                color: theme('colors.primary');
+                font-weight: 600;
+                border-left-color: theme('colors.primary');
+                background-color: rgba(22, 93, 255, 0.05);
+            }
+            .form-input-focus {
+                transition: all 0.3s ease;
+            }
+            .form-input-focus:focus {
+                border-color: theme('colors.primary');
+                box-shadow: 0 0 0 3px rgba(22, 93, 255, 0.1);
+            }
+            .upload-area {
+                transition: all 0.3s ease;
+            }
+            .upload-area:hover {
+                background-color: rgba(22, 93, 255, 0.05);
+            }
+            .success-toast {
+                animation: slideIn 0.3s ease-out forwards, fadeOut 0.3s ease-in 3s forwards;
+            }
+            @keyframes slideIn {
+                from { transform: translateY(-20px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            .bg-element {
+                position: absolute;
+                border-radius: 50%;
+                opacity: 0.1;
+                z-index: -1;
+            }
+        }
+    </style>
+	</head>
+	<body class="font-inter bg-grid text-dark min-h-screen flex flex-col animate-fade-in relative overflow-x-hidden">
+		<!-- 动态背景元素 -->
+		<div class="bg-element bg-primary w-[600px] h-[600px] top-[-300px] left-[-200px] animate-float"></div>
+		<!-- <div class="bg-element bg-accent w-[500px] h-[500px] bottom-[-250px] right-[-200px] animate-float-delay"></div> -->
+		
+		<!-- 浮动装饰元素 -->
+		<div class="absolute top-[30%] right-[15%] w-16 h-16 rounded-full bg-primary/10 animate-float hidden lg:block"></div>
+		<div class="absolute bottom-[40%] left-[8%] w-10 h-10 rounded-full bg-accent/10 animate-float-delay hidden lg:block"></div>
+
+		<nav class="glass-effect shadow-sm sticky top-0 z-50 transition-all duration-300">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="flex justify-between h-16">
+					<div class="flex items-center">
+						<div class="flex-shrink-0 flex items-center group">
+							<i class="fa fa-robot text-primary text-2xl mr-2 transition-transform duration-300 group-hover:rotate-12"></i>
+							<span class="text-xl font-bold text-primary transition-all duration-300 group-hover:text-accent">洞若观合 —— 多模态AI面试评测系统</span>
+						</div>
+						<div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="dashboard.html" class="nav-link border-primary text-dark border-b-2 px-1 pt-1 inline-flex items-center text-sm font-medium animate-slide-in-right" style="animation-delay: 0.1s">
+                            <i class="fa fa-home mr-1"></i>
+                            <span>首页</span>
+                        </a>
+							<a href="interview.html"
+								class="nav-item border-transparent text-dark-light hover:text-dark px-1 pt-1 inline-flex items-center text-sm font-medium">
+								<i class="fa fa-video-camera mr-1"></i>
+								<span>面试评估</span>
+							</a>
+							<a href="reports.html"
+								class="nav-item border-transparent text-dark-light hover:text-dark px-1 pt-1 inline-flex items-center text-sm font-medium">
+								<i class="fa fa-file-text-o mr-1"></i>
+								<span>报告中心</span>
+							</a>
+							<a href="history.html"
+								class="nav-item border-transparent text-dark-light hover:text-dark px-1 pt-1 inline-flex items-center text-sm font-medium">
+								<i class="fa fa-history mr-1"></i>
+								<span>历史记录</span>
+							</a>
+						</div>
+					</div>
+					<div class="flex items-center">
+						<button type="button"
+							class="btn-effect p-2 rounded-full text-dark-light hover:text-primary hover:bg-primary/5 focus:outline-none relative transition-all duration-300">
+							<i class="fa fa-bell-o"></i>
+							<span class="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full animate-pulse"></span>
+						</button>
+						<!-- 用户信息区域 - 当前页面 -->
+						<div class="ml-4 user-profile-container" onclick="window.location.href='user-profile.html'">
+							<div class="flex items-center group">
+								<div
+									class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-white">
+									<i class="fa fa-user"></i>
+								</div>
+								<span id="user-name"
+									class="ml-2 text-sm font-medium text-dark-light hidden sm:block transition-colors duration-300 group-hover:text-primary">用户名称</span>
+								<button type="button"
+									class="ml-1 p-2 rounded-full text-dark-light hover:text-primary hover:bg-primary/5 focus:outline-none transition-all duration-300">
+									<i class="fa fa-angle-down"></i>
+								</button>
+							</div>
+						</div>
+						<button type="button" id="mobile-menu-button"
+							class="ml-4 p-2 rounded-md text-dark-light hover:text-primary hover:bg-primary/5 focus:outline-none sm:hidden transition-all duration-300">
+							<i class="fa fa-bars"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+			
+			<!-- 移动端菜单 -->
+			<div id="mobile-menu" class="hidden sm:hidden bg-white shadow-md animate-fade-in">
+				<div class="px-2 pt-2 pb-3 space-y-1">
+					<a href="dashboard.html" class="block px-3 py-2 rounded-md text-base font-medium text-dark-light hover:text-primary hover:bg-ultra-light transition-colors duration-300">
+						<i class="fa fa-tachometer mr-2"></i>仪表盘
+					</a>
+					<a href="interview.html" class="block px-3 py-2 rounded-md text-base font-medium text-dark-light hover:text-primary hover:bg-ultra-light transition-colors duration-300">
+						<i class="fa fa-video-camera mr-2"></i>面试评估
+					</a>
+					<a href="reports.html" class="block px-3 py-2 rounded-md text-base font-medium text-dark-light hover:text-primary hover:bg-ultra-light transition-colors duration-300">
+						<i class="fa fa-file-text-o mr-2"></i>报告中心
+					</a>
+					<a href="history.html" class="block px-3 py-2 rounded-md text-base font-medium text-dark-light hover:text-primary hover:bg-ultra-light transition-colors duration-300">
+						<i class="fa fa-history mr-2"></i>历史记录
+					</a>
+					<a href="user-profile.html" class="block px-3 py-2 rounded-md text-base font-medium text-primary bg-primary/5">
+						<i class="fa fa-user-circle mr-2"></i>个人资料
+					</a>
+				</div>
+			</div>
+		</nav>
+
+		<main class="flex-grow relative">
+			<section id="user-profile" class="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+				<div class="mb-8 animate-slide-up" style="animation-delay: 0.1s">
+					<h1 class="text-[clamp(1.5rem,3vw,2.2rem)] font-bold text-dark mb-2 text-shadow">个人资料</h1>
+					<p class="text-dark-light">管理您的个人信息和账户设置</p>
+				</div>
+
+				<div class="grid grid-cols-1 lg:grid-cols-4 gap-8 animate-slide-up" style="animation-delay: 0.2s">
+					<!-- 侧边栏导航 -->
+					<div class="lg:col-span-1">
+						<div class="bg-white rounded-xl shadow-card p-4 sticky top-24">
+							<div class="flex flex-col space-y-1">
+								<button class="profile-tab active w-full text-left px-4 py-3 rounded-lg border-l-4 border-transparent text-dark transition-all duration-300 flex items-center" data-tab="basic-info">
+									<i class="fa fa-user-circle w-5 text-center mr-3 text-primary"></i>
+									基本信息
+								</button>
+								<button class="profile-tab w-full text-left px-4 py-3 rounded-lg border-l-4 border-transparent text-dark-light hover:text-dark transition-all duration-300 flex items-center" data-tab="account-settings">
+									<i class="fa fa-cog w-5 text-center mr-3"></i>
+									账户设置
+								</button>
+								<button class="profile-tab w-full text-left px-4 py-3 rounded-lg border-l-4 border-transparent text-dark-light hover:text-dark transition-all duration-300 flex items-center" data-tab="security">
+									<i class="fa fa-lock w-5 text-center mr-3"></i>
+									安全设置
+								</button>
+								<button class="profile-tab w-full text-left px-4 py-3 rounded-lg border-l-4 border-transparent text-dark-light hover:text-dark transition-all duration-300 flex items-center" data-tab="notifications">
+									<i class="fa fa-bell w-5 text-center mr-3"></i>
+									通知设置
+								</button>
+							</div>
+							
+							<div class="mt-8 pt-6 border-t border-light-gray/30">
+								<button id="logout-btn" class="w-full flex items-center justify-center px-4 py-3 rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 transition-all duration-300">
+									<i class="fa fa-sign-out mr-2"></i>
+									退出登录
+								</button>
+							</div>
+						</div>
+					</div>
+
+					<!-- 主内容区域 -->
+					<div class="lg:col-span-3 space-y-6">
+						<!-- 基本信息 -->
+						<div class="profile-content active" id="basic-info-content">
+							<div class="bg-white rounded-xl shadow-card p-6 transition-all duration-500 hover:shadow-card-hover">
+								<h2 class="text-xl font-bold text-dark mb-6">基本信息</h2>
+								
+								<div class="flex flex-col md:flex-row md:items-center md:space-x-8 mb-8">
+									<div class="flex flex-col items-center mb-6 md:mb-0">
+										<div class="relative mb-4">
+											<div class="w-32 h-32 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
+												<img id="profile-image" src="https://picsum.photos/200/200?random=1" alt="用户头像" class="w-full h-full object-cover">
+											</div>
+											<div class="absolute bottom-0 right-0 w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-all duration-300">
+												<i class="fa fa-camera"></i>
+											</div>
+										</div>
+										<p class="text-sm text-dark-light">点击更换头像</p>
+										<input type="file" id="image-upload" accept="image/*" class="hidden">
+									</div>
+									
+									<div class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-6">
+										<div>
+											<label for="full-name" class="block text-sm font-medium text-dark-light mb-1">姓名</label>
+											<input type="text" id="full-name" value="张三" 
+												class="w-full px-4 py-2 rounded-lg border border-light-gray focus:outline-none form-input-focus">
+										</div>
+										<div>
+											<label for="email" class="block text-sm font-medium text-dark-light mb-1">电子邮箱</label>
+											<input type="email" id="email" value="zhangsan@example.com" 
+												class="w-full px-4 py-2 rounded-lg border border-light-gray focus:outline-none form-input-focus bg-ultra-light/50" readonly>
+										</div>
+										<div>
+											<label for="phone" class="block text-sm font-medium text-dark-light mb-1">手机号码</label>
+											<input type="tel" id="phone" value="138****5678" 
+												class="w-full px-4 py-2 rounded-lg border border-light-gray focus:outline-none form-input-focus">
+										</div>
+										<div>
+											<label for="position" class="block text-sm font-medium text-dark-light mb-1">求职意向</label>
+											<select id="position" class="w-full px-4 py-2 rounded-lg border border-light-gray focus:outline-none form-input-focus">
+												<option value="frontend">前端开发工程师</option>
+												<option value="backend">后端开发工程师</option>
+												<option value="fullstack">全栈开发工程师</option>
+												<option value="product">产品经理</option>
+												<option value="design">UI/UX设计师</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								
+								<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+									<div>
+										<label for="education" class="block text-sm font-medium text-dark-light mb-1">最高学历</label>
+										<select id="education" class="w-full px-4 py-2 rounded-lg border border-light-gray focus:outline-none form-input-focus">
+											<option value="bachelor">本科</option>
+											<option value="master">硕士</option>
+											<option value="phd">博士</option>
+											<option value="associate">专科</option>
+											<option value="highschool">高中及以下</option>
+										</select>
+									</div>
+									<div>
+										<label for="experience" class="block text-sm font-medium text-dark-light mb-1">工作经验</label>
+										<select id="experience" class="w-full px-4 py-2 rounded-lg border border-light-gray focus:outline-none form-input-focus">
+											<option value="fresh">应届毕业生</option>
+											<option value="1-3">1-3年</option>
+											<option value="3-5">3-5年</option>
+											<option value="5-10">5-10年</option>
+											<option value="10+">10年以上</option>
+										</select>
+									</div>
+									<div class="md:col-span-2">
+										<label for="introduction" class="block text-sm font-medium text-dark-light mb-1">个人简介</label>
+										<textarea id="introduction" rows="4" 
+											class="w-full px-4 py-2 rounded-lg border border-light-gray focus:outline-none form-input-focus">拥有5年前端开发经验，熟悉React、Vue等主流框架，参与过多个大型项目的开发与优化工作。</textarea>
+									</div>
+								</div>
+								
+								<div class="mt-8 flex justify-end">
+									<button id="save-basic-info" class="btn-effect bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-all duration-300">
+										保存修改
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<!-- 账户设置 -->
+						<div class="profile-content hidden" id="account-settings-content">
+							<div class="bg-white rounded-xl shadow-card p-6 transition-all duration-500 hover:shadow-card-hover">
+								<h2 class="text-xl font-bold text-dark mb-6">账户设置</h2>
+								
+								<div class="space-y-6">
+									<div>
+										<label for="username" class="block text-sm font-medium text-dark-light mb-1">用户名</label>
+										<div class="flex">
+											<input type="text" id="username" value="zhangsan123" 
+												class="flex-grow px-4 py-2 rounded-l-lg border border-light-gray focus:outline-none form-input-focus">
+											<span class="inline-flex items-center px-3 text-sm font-medium text-dark-light bg-ultra-light border border-l-0 border-light-gray rounded-r-lg">
+												@aiinterview.com
+											</span>
+										</div>
+										<p class="mt-1 text-xs text-dark-light">用户名用于登录，修改后需重新登录</p>
+									</div>
+									
+									<div>
+										<label class="block text-sm font-medium text-dark-light mb-3">时区设置</label>
+										<select id="timezone" class="w-full px-4 py-2 rounded-lg border border-light-gray focus:outline-none form-input-focus">
+											<option value="Asia/Shanghai" selected>Asia/Shanghai (GMT+8)</option>
+											<option value="UTC">UTC (GMT+0)</option>
+											<option value="America/New_York">America/New_York (GMT-4)</option>
+											<option value="Europe/London">Europe/London (GMT+1)</option>
+										</select>
+									</div>
+									
+									<div>
+										<label class="block text-sm font-medium text-dark-light mb-3">语言偏好</label>
+										<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+											<div class="flex items-center">
+												<input id="language-zh" name="language" type="radio" checked 
+													class="h-4 w-4 text-primary focus:ring-primary border-light-gray">
+												<label for="language-zh" class="ml-2 block text-sm text-dark">
+													简体中文
+												</label>
+											</div>
+											<div class="flex items-center">
+												<input id="language-en" name="language" type="radio" 
+													class="h-4 w-4 text-primary focus:ring-primary border-light-gray">
+												<label for="language-en" class="ml-2 block text-sm text-dark">
+													English
+												</label>
+											</div>
+										</div>
+									</div>
+									
+									<div class="pt-4 border-t border-light-gray/30">
+										<h3 class="text-base font-medium text-dark mb-4">面试数据</h3>
+										<div class="space-y-3">
+											<div class="flex items-center justify-between">
+												<div class="flex items-center">
+													<i class="fa fa-download text-primary mr-3"></i>
+													<span class="text-sm">导出我的所有面试数据</span>
+												</div>
+												<button id="export-data" class="text-primary hover:text-accent text-sm transition-colors duration-300">
+													导出
+												</button>
+											</div>
+											<div class="flex items-center justify-between">
+												<div class="flex items-center">
+													<i class="fa fa-trash text-red-500 mr-3"></i>
+													<span class="text-sm">清除所有面试历史记录</span>
+												</div>
+												<button id="clear-history" class="text-red-500 hover:text-red-700 text-sm transition-colors duration-300">
+													清除
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="mt-8 flex justify-end">
+									<button id="save-account-settings" class="btn-effect bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-all duration-300">
+										保存修改
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<!-- 安全设置 -->
+						<div class="profile-content hidden" id="security-content">
+							<div class="bg-white rounded-xl shadow-card p-6 transition-all duration-500 hover:shadow-card-hover">
+								<h2 class="text-xl font-bold text-dark mb-6">安全设置</h2>
+								
+								<div class="space-y-8">
+									<div>
+										<h3 class="text-base font-medium text-dark mb-4">修改密码</h3>
+										<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+											<div>
+												<label for="current-password" class="block text-sm font-medium text-dark-light mb-1">当前密码</label>
+												<input type="password" id="current-password" 
+													class="w-full px-4 py-2 rounded-lg border border-light-gray focus:outline-none form-input-focus">
+											</div>
+											<div>
+												<label for="new-password" class="block text-sm font-medium text-dark-light mb-1">新密码</label>
+												<input type="password" id="new-password" 
+													class="w-full px-4 py-2 rounded-lg border border-light-gray focus:outline-none form-input-focus">
+											</div>
+											<div class="md:col-span-2">
+												<label for="confirm-password" class="block text-sm font-medium text-dark-light mb-1">确认新密码</label>
+												<input type="password" id="confirm-password" 
+													class="w-full px-4 py-2 rounded-lg border border-light-gray focus:outline-none form-input-focus">
+												<p class="mt-1 text-xs text-dark-light">密码长度至少8位，包含字母和数字</p>
+											</div>
+										</div>
+									</div>
+									
+									<div class="pt-4 border-t border-light-gray/30">
+										<h3 class="text-base font-medium text-dark mb-4">两步验证</h3>
+										<div class="flex items-center justify-between">
+											<div>
+												<p class="text-sm font-medium text-dark">启用两步验证</p>
+												<p class="text-xs text-dark-light mt-1">提高账户安全性，登录时需要额外验证</p>
+											</div>
+											<div class="relative inline-block w-12 h-6">
+												<input type="checkbox" id="two-factor-auth" class="opacity-0 w-0 h-0">
+												<label for="two-factor-auth" class="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-light-gray rounded-full transition-all duration-300 after:absolute after:content-[''] after:h-5 after:w-5 after:left-0.5 after:bottom-0.5 after:bg-white after:rounded-full after:transition-all after:duration-300"></label>
+											</div>
+										</div>
+									</div>
+									
+									<div class="pt-4 border-t border-light-gray/30">
+										<h3 class="text-base font-medium text-dark mb-4">登录历史</h3>
+										<div class="overflow-x-auto">
+											<table class="min-w-full divide-y divide-light-gray">
+												<thead class="bg-ultra-light">
+													<tr>
+														<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-light uppercase tracking-wider">时间</th>
+														<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-light uppercase tracking-wider">地点</th>
+														<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-light uppercase tracking-wider">设备</th>
+														<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-dark-light uppercase tracking-wider">状态</th>
+													</tr>
+												</thead>
+												<tbody class="bg-white divide-y divide-light-gray">
+													<tr>
+														<td class="px-6 py-4 whitespace-nowrap text-sm text-dark">2023-05-20 09:32</td>
+														<td class="px-6 py-4 whitespace-nowrap text-sm text-dark">北京市</td>
+														<td class="px-6 py-4 whitespace-nowrap text-sm text-dark">Chrome / Windows</td>
+														<td class="px-6 py-4 whitespace-nowrap text-sm">
+															<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+																成功
+															</span>
+														</td>
+													</tr>
+													<tr>
+														<td class="px-6 py-4 whitespace-nowrap text-sm text-dark">2023-05-18 16:45</td>
+														<td class="px-6 py-4 whitespace-nowrap text-sm text-dark">上海市</td>
+														<td class="px-6 py-4 whitespace-nowrap text-sm text-dark">Safari / macOS</td>
+														<td class="px-6 py-4 whitespace-nowrap text-sm">
+															<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+																成功
+															</span>
+														</td>
+													</tr>
+													<tr>
+														<td class="px-6 py-4 whitespace-nowrap text-sm text-dark">2023-05-17 21:18</td>
+														<td class="px-6 py-4 whitespace-nowrap text-sm text-dark">广州市</td>
+														<td class="px-6 py-4 whitespace-nowrap text-sm text-dark">Firefox / Linux</td>
+														<td class="px-6 py-4 whitespace-nowrap text-sm">
+															<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+																失败
+															</span>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								
+								<div class="mt-8 flex justify-end">
+									<button id="save-security-settings" class="btn-effect bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-all duration-300">
+										保存修改
+									</button>
+								</div>
+							</div>
+						</div>
+
+						<!-- 通知设置 -->
+						<div class="profile-content hidden" id="notifications-content">
+							<div class="bg-white rounded-xl shadow-card p-6 transition-all duration-500 hover:shadow-card-hover">
+								<h2 class="text-xl font-bold text-dark mb-6">通知设置</h2>
+								
+								<div class="space-y-6">
+									<div>
+										<h3 class="text-base font-medium text-dark mb-4">面试通知</h3>
+										
+										<div class="space-y-4">
+											<div class="flex items-center justify-between">
+												<div>
+													<p class="text-sm font-medium text-dark">面试开始提醒</p>
+													<p class="text-xs text-dark-light mt-1">面试开始前15分钟提醒</p>
+												</div>
+												<div class="relative inline-block w-12 h-6">
+													<input type="checkbox" id="interview-reminder" checked class="opacity-0 w-0 h-0">
+													<label for="interview-reminder" class="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-primary rounded-full transition-all duration-300 after:absolute after:content-[''] after:h-5 after:w-5 after:right-0.5 after:bottom-0.5 after:bg-white after:rounded-full after:transition-all after:duration-300"></label>
+												</div>
+											</div>
+											
+											<div class="flex items-center justify-between">
+												<div>
+													<p class="text-sm font-medium text-dark">面试结果通知</p>
+													<p class="text-xs text-dark-light mt-1">面试评估完成后通知</p>
+												</div>
+												<div class="relative inline-block w-12 h-6">
+													<input type="checkbox" id="interview-result" checked class="opacity-0 w-0 h-0">
+													<label for="interview-result" class="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-primary rounded-full transition-all duration-300 after:absolute after:content-[''] after:h-5 after:w-5 after:right-0.5 after:bottom-0.5 after:bg-white after:rounded-full after:transition-all after:duration-300"></label>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="pt-4 border-t border-light-gray/30">
+										<h3 class="text-base font-medium text-dark mb-4">系统通知</h3>
+										
+										<div class="space-y-4">
+											<div class="flex items-center justify-between">
+												<div>
+													<p class="text-sm font-medium text-dark">账户活动通知</p>
+													<p class="text-xs text-dark-light mt-1">账户信息变更、登录异常等</p>
+												</div>
+												<div class="relative inline-block w-12 h-6">
+													<input type="checkbox" id="account-activity" checked class="opacity-0 w-0 h-0">
+													<label for="account-activity" class="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-primary rounded-full transition-all duration-300 after:absolute after:content-[''] after:h-5 after:w-5 after:right-0.5 after:bottom-0.5 after:bg-white after:rounded-full after:transition-all after:duration-300"></label>
+												</div>
+											</div>
+											
+											<div class="flex items-center justify-between">
+												<div>
+													<p class="text-sm font-medium text-dark">产品更新通知</p>
+													<p class="text-xs text-dark-light mt-1">新功能发布、系统更新等</p>
+												</div>
+												<div class="relative inline-block w-12 h-6">
+													<input type="checkbox" id="product-updates" class="opacity-0 w-0 h-0">
+													<label for="product-updates" class="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-light-gray rounded-full transition-all duration-300 after:absolute after:content-[''] after:h-5 after:w-5 after:left-0.5 after:bottom-0.5 after:bg-white after:rounded-full after:transition-all after:duration-300"></label>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="pt-4 border-t border-light-gray/30">
+										<h3 class="text-base font-medium text-dark mb-4">通知方式</h3>
+										
+										<div class="space-y-3">
+											<div class="flex items-center">
+												<input id="notify-email" name="notify-method" type="checkbox" checked 
+													class="h-4 w-4 text-primary focus:ring-primary border-light-gray">
+												<label for="notify-email" class="ml-2 block text-sm text-dark">
+													电子邮件
+												</label>
+											</div>
+											<div class="flex items-center">
+												<input id="notify-inapp" name="notify-method" type="checkbox" checked 
+													class="h-4 w-4 text-primary focus:ring-primary border-light-gray">
+												<label for="notify-inapp" class="ml-2 block text-sm text-dark">
+													应用内通知
+												</label>
+											</div>
+											<div class="flex items-center">
+												<input id="notify-sms" name="notify-method" type="checkbox" 
+													class="h-4 w-4 text-primary focus:ring-primary border-light-gray">
+												<label for="notify-sms" class="ml-2 block text-sm text-dark">
+													短信通知
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="mt-8 flex justify-end">
+									<button id="save-notification-settings" class="btn-effect bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-all duration-300">
+										保存修改
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<!-- 成功提示 -->
+		<div id="success-toast" class="fixed top-4 right-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg shadow-lg flex items-center hidden success-toast z-50">
+			<i class="fa fa-check-circle mr-2"></i>
+			<span>设置已成功保存</span>
+		</div>
+
+		<!-- 确认对话框 -->
+		<div id="confirm-dialog" class="fixed inset-0 bg-dark/50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+			<div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-lg animate-slide-up">
+				<div class="text-center mb-4">
+					<div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+						<i class="fa fa-exclamation-triangle text-red-500"></i>
+					</div>
+					<h3 class="text-lg font-bold text-dark mb-2" id="confirm-title">确认退出登录？</h3>
+					<p class="text-dark-light" id="confirm-message">您将退出当前账户，需要重新登录才能继续使用系统。</p>
+				</div>
+				<div class="flex space-x-3">
+					<button id="cancel-confirm" class="flex-1 btn-effect border border-light-gray bg-white text-dark-light px-4 py-2 rounded-lg hover:bg-ultra-light transition-all duration-300">
+						取消
+					</button>
+					<button id="confirm-action" class="flex-1 btn-effect bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300">
+						确认
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<footer class="glass-effect border-t border-light-gray/30 mt-12 transition-all duration-300 hover:border-primary/20">
+			<div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+				<div class="flex flex-col md:flex-row md:items-center md:justify-between">
+					<div class="flex items-center mb-4 md:mb-0 group">
+						<i class="fa fa-robot text-primary text-2xl mr-2 transition-transform duration-300 group-hover:rotate-12"></i>
+						<span class="text-xl font-bold text-primary transition-all duration-300 group-hover:text-accent">洞若观合 —— 多模态AI面试评测系统</span>
+					</div>
+					<div class="flex flex-wrap justify-center text-sm text-dark-light">
+						<p>© 2025 洞若观合 —— 多模态 AI 面试评测系统  | SZIIT . 保留所有权利.</p>
+						<div class="ml-4 space-x-4">
+							<a href="#" class="hover:text-primary transition-colors duration-300 relative inline-block">
+								隐私政策
+								<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 hover:w-full"></span>
+							</a>
+							<a href="#" class="hover:text-primary transition-colors duration-300 relative inline-block">
+								服务条款
+								<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 hover:w-full"></span>
+							</a>
+							<a href="#" class="hover:text-primary transition-colors duration-300 relative inline-block">
+								帮助中心
+								<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 hover:w-full"></span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+		<script src="/ui/js/auth_check.js"></script>
+		<script src="js/user-profile.js"></script>
+	</body>
+</html>

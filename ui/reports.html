@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>评估报告 - 洞若观合</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script>
+			tailwind.config = {
+				theme: {
+					extend: {
+						colors: {
+							primary: '#165DFF',
+							secondary: '#0FC6C2',
+							accent: '#722ED1',
+							dark: '#1D2129',
+							'dark-light': '#4E5969',
+							'light-gray': '#C9CDD4',
+							'ultra-light': '#F2F3F5',
+							'neutral-50': '#F9FAFB',
+							'neutral-100': '#F3F4F6',
+							'neutral-200': '#E5E7EB',
+						},
+						fontFamily: {
+							inter: ['Inter', 'system-ui', 'sans-serif'],
+						},
+						boxShadow: {
+							'card': '0 4px 20px rgba(0, 0, 0, 0.08)',
+							'card-hover': '0 15px 35px rgba(22, 93, 255, 0.15)',
+							'elevation-1': '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)',
+							'elevation-2': '0 3px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12)',
+							'elevation-3': '0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.10)',
+						},
+						animation: {
+							'fade-in': 'fadeIn 0.6s ease-in-out',
+							'slide-up': 'slideUp 0.6s ease-out',
+							'slide-in-right': 'slideInRight 0.6s ease-out',
+							'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+							'bounce-slow': 'bounce 3s infinite',
+							'scale': 'scale 0.4s ease-in-out',
+							'progress': 'progress 1.8s ease-out forwards',
+							'float': 'float 10s ease-in-out infinite',
+							'float-fast': 'float 7s ease-in-out infinite',
+							'float-slow': 'float 12s ease-in-out infinite',
+							'shine': 'shine 2.5s infinite',
+							'rotate-slow': 'rotate 25s linear infinite',
+							'pulse-soft': 'pulseSoft 5s infinite',
+							'gradient': 'gradient 8s ease infinite',
+							'grid-move': 'gridMove 15s linear infinite',
+						},
+						keyframes: {
+							fadeIn: {
+								'0%': { opacity: '0' },
+								'100%': { opacity: '1' }
+							},
+							slideUp: {
+								'0%': { transform: 'translateY(30px)', opacity: '0' },
+								'100%': { transform: 'translateY(0)', opacity: '1' }
+							},
+							slideInRight: {
+								'0%': { transform: 'translateX(30px)', opacity: '0' },
+								'100%': { transform: 'translateX(0)', opacity: '1' }
+							},
+							scale: {
+								'0%, 100%': { transform: 'scale(1)' },
+								'50%': { transform: 'scale(1.08)' }
+							},
+							progress: {
+								'0%': { width: '0%' },
+								'100%': { width: '100%' }
+							},
+							float: {
+								'0%, 100%': { transform: 'translateY(0) translateX(0)' },
+								'25%': { transform: 'translateY(-20px) translateX(15px)' },
+								'75%': { transform: 'translateY(15px) translateX(-20px)' }
+							},
+							shine: {
+								'0%, 100%': { opacity: 0.2 },
+								'50%': { opacity: 0.7 }
+							},
+							rotate: {
+								'0%': { transform: 'rotate(0deg)' },
+								'100%': { transform: 'rotate(360deg)' }
+							},
+							pulseSoft: {
+								'0%, 100%': { opacity: 0.15 },
+								'50%': { opacity: 0.4 }
+							},
+							gradient: {
+								'0%, 100%': { backgroundPosition: '0% 50%' },
+								'50%': { backgroundPosition: '100% 50%' }
+							},
+							gridMove: {
+								'0%': { backgroundPosition: '0 0' },
+								'100%': { backgroundPosition: '40px 40px' }
+							}
+						}
+					},
+				}
+			}
+		</script>
+		<style type="text/tailwindcss">
+			@layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            }
+            .text-gradient {
+                background-clip: text;
+                -webkit-background-clip: text;
+                color: transparent;
+                background-image: linear-gradient(135deg, #165DFF 0%, #722ED1 100%);
+                background-size: 200% auto;
+                animation: gradient 8s ease infinite;
+            }
+            .bg-gradient-tech {
+                background: linear-gradient(135deg, #165DFF 0%, #722ED1 100%);
+                background-size: 200% auto;
+                animation: gradient 8s ease infinite;
+            }
+            .clip-path-slant {
+                clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            }
+            .glass-effect {
+                backdrop-filter: blur(16px);
+                background-color: rgba(255, 255, 255, 0.75);
+            }
+            .scroll-reveal {
+                opacity: 0;
+                transform: translateY(30px);
+                transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .scroll-reveal.active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .hover-lift {
+                transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .hover-lift:hover {
+                transform: translateY(-8px);
+            }
+            .nav-item {
+                position: relative;
+                transition: color 0.3s ease;
+            }
+            .nav-item::after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                bottom: -2px;
+                left: 0;
+                background-color: #165DFF;
+                transition: width 0.3s ease;
+            }
+            .nav-item:hover::after {
+                width: 100%;
+            }
+            .pulse-dot {
+                position: relative;
+            }
+            .pulse-dot::before {
+                content: '';
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: #165DFF;
+                animation: pulse 1.5s infinite;
+            }
+            @keyframes pulse {
+                0% {
+                    transform: scale(0.95);
+                    box-shadow: 0 0 0 0 rgba(22, 93, 255, 0.7);
+                }
+                70% {
+                    transform: scale(1);
+                    box-shadow: 0 0 0 10px rgba(22, 93, 255, 0);
+                }
+                100% {
+                    transform: scale(0.95);
+                    box-shadow: 0 0 0 0 rgba(22, 93, 255, 0);
+                }
+            }
+            .bg-pattern {
+                background-image: 
+                    radial-gradient(rgba(22, 93, 255, 0.12) 1px, transparent 1px),
+                    radial-gradient(rgba(114, 46, 209, 0.08) 1px, transparent 1px),
+                    linear-gradient(to right, transparent, rgba(255,255,255,0.5) 50%, transparent);
+                background-size: 50px 50px, 30px 30px, 100% 1px;
+                background-position: 0 0, 15px 15px, 0 0;
+                background-repeat: repeat, repeat, repeat-y;
+            }
+            .bg-glass {
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                transition: all 0.5s ease;
+            }
+            .bg-glass:hover {
+                background: rgba(255, 255, 255, 0.85);
+                border-color: rgba(255, 255, 255, 0.3);
+            }
+            .decorative-element {
+                border-radius: 50%;
+                filter: blur(150px);
+                position: absolute;
+                z-index: 0;
+            }
+            .grid-pattern {
+                background-size: 40px 40px;
+                background-image: 
+                    linear-gradient(to right, rgba(22, 93, 255, 0.05) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(22, 93, 255, 0.05) 1px, transparent 1px);
+                background-position: 0 0;
+                background-repeat: repeat;
+                animation: gridMove 15s linear infinite;
+            }
+            .feature-icon {
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .feature-card:hover .feature-icon {
+                transform: scale(1.15) rotate(5deg);
+            }
+            .btn-primary {
+                position: relative;
+                overflow: hidden;
+                z-index: 1;
+            }
+            .btn-primary::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+                transition: 0.6s;
+                z-index: -1;
+            }
+            .btn-primary:hover::before {
+                left: 100%;
+            }
+            .footer-spacer {
+                height: 120px;
+            }
+            .text-balance {
+                text-wrap: balance;
+            }
+            .noise-bg {
+                position: relative;
+            }
+            .noise-bg::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0.03;
+                pointer-events: none;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            }
+            /* 添加缺失的类定义 */
+            .card-hover-effect {
+                transition: all 0.3s ease;
+            }
+            .card-hover-effect:hover {
+                box-shadow: var(--tw-shadow-card-hover);
+                transform: translateY(-2px);
+            }
+            .btn-effect {
+                transition: all 0.2s ease;
+            }
+            .btn-effect:hover {
+                transform: translateY(-1px);
+            }
+            .btn-effect:active {
+                transform: translateY(1px);
+            }
+            /* 自定义滚动条样式 */
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        }
+        </style>
+</head>
+<body class="font-inter bg-neutral-50 text-dark min-h-screen relative overflow-x-hidden noise-bg">
+    <!-- 渐变背景层 -->
+    <div class="absolute inset-0 bg-gradient-to-br from-neutral-50 via-white to-primary/5 z-0"></div>
+
+    <!-- 动态网格背景 -->
+    <div class="grid-pattern absolute inset-0 opacity-60 z-0"></div>
+
+    <!-- 装饰性背景元素 - 增强深度感和动态效果 -->
+    <div class="decorative-element bg-primary/30 w-[600px] h-[600px] top-[-300px] -left-[200px] animate-float-slow">
+    </div>
+    <div class="decorative-element bg-accent/20 w-[500px] h-[500px] bottom-[6200px] right-[-150px] animate-float">
+    </div>
+    <div class="decorative-element bg-secondary/25 w-[400px] h-[400px] top-[30%] right-[20%] animate-float-fast">
+    </div>
+    <div class="decorative-element bg-primary/15 w-[300px] h-[300px] bottom-[10%] left-[15%] animate-rotate-slow">
+    </div>
+
+    <!-- 背景图案覆盖 -->
+    <div class="bg-pattern absolute inset-0 opacity-80 z-0"></div>
+
+    <!-- 导航栏 -->
+    <nav class="glass-effect shadow-sm sticky top-0 z-50 transition-all duration-300" aria-label="主导航">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center group">
+                        <i class="fa fa-robot text-primary text-2xl mr-2 transition-transform duration-300 group-hover:rotate-12"></i>
+                        <span class="text-xl font-bold text-primary transition-all duration-300 group-hover:text-accent">洞若观合 —— 多模态 AI 面试评测系统</span>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="dashboard.html" class="nav-item border-transparent text-dark-light hover:text-dark px-1 pt-1 inline-flex items-center text-sm font-medium">
+                            <i class="fa fa-home mr-1"></i>
+                            <span>首页</span>
+                        </a>
+                        <a href="interview.html" class="nav-item border-transparent text-dark-light hover:text-dark px-1 pt-1 inline-flex items-center text-sm font-medium">
+                            <i class="fa fa-video-camera mr-1"></i>
+                            <span>面试评估</span>
+                        </a>
+                        <a href="reports.html" class="nav-item text-primary px-1 pt-1 inline-flex items-center text-sm font-medium">
+                            <i class="fa fa-file-text-o mr-1"></i>
+                            <span>报告中心</span>
+                        </a>
+                        <a href="history.html" class="nav-item border-transparent text-dark-light hover:text-dark px-1 pt-1 inline-flex items-center text-sm font-medium">
+                            <i class="fa fa-history mr-1"></i>
+                            <span>历史记录</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <button type="button" class="btn-effect p-2 rounded-full text-dark-light hover:text-primary hover:bg-primary/5 focus:outline-none relative transition-all duration-300" aria-label="通知">
+                        <i class="fa fa-bell-o"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full animate-pulse" aria-hidden="true"></span>
+                    </button>
+                    <div class="ml-4 flex items-center user-profile-container" onclick="window.location.href='user-profile.html'">
+                        <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary transition-all duration-300 hover:bg-primary hover:text-white cursor-pointer" aria-label="用户资料">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <span id="user-name" class="ml-2 text-sm font-medium text-dark-light hidden sm:block transition-colors duration-300 hover:text-primary cursor-pointer">用户名称</span>
+                        <button type="button" class="ml-1 p-2 rounded-full text-dark-light hover:text-primary hover:bg-primary/5 focus:outline-none transition-all duration-300" aria-label="菜单">
+                            <i class="fa fa-angle-down"></i>
+                        </button>
+                    </div>
+                    <button type="button" id="mobile-menu-button" class="ml-4 p-2 rounded-md text-dark-light hover:text-primary hover:bg-primary/5 focus:outline-none sm:hidden transition-all duration-300" aria-expanded="false" aria-controls="mobile-menu" aria-label="主菜单">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 移动端菜单 (默认隐藏) -->
+        <div id="mobile-menu" class="hidden sm:hidden bg-white shadow-md animate-fade-in">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="dashboard.html" class="block px-3 py-2 rounded-md text-base font-medium text-dark-light hover:text-primary hover:bg-ultra-light transition-colors duration-300">
+                    <i class="fa fa-tachometer mr-2"></i>仪表盘
+                </a>
+                <a href="interview.html" class="block px-3 py-2 rounded-md text-base font-medium text-dark-light hover:text-primary hover:bg-ultra-light transition-colors duration-300">
+                    <i class="fa fa-video-camera mr-2"></i>面试评估
+                </a>
+                <a href="reports.html" class="block px-3 py-2 rounded-md text-base font-medium text-primary bg-primary/5">
+                    <i class="fa fa-file-text-o mr-2"></i>报告中心
+                </a>
+                <a href="history.html" class="block px-3 py-2 rounded-md text-base font-medium text-dark-light hover:text-primary hover:bg-ultra-light transition-colors duration-300">
+                    <i class="fa fa-history mr-2"></i>历史记录
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主体内容 -->
+    <main class="flex-grow relative">
+        <section id="reports" class="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+            <div class="mb-8 animate-slide-up" style="animation-delay: 0.1s">
+                <h1 class="text-[clamp(1.5rem,3vw,2.2rem)] font-bold text-dark mb-2 text-shadow">评估报告</h1>
+                <p class="text-dark-light">AI面试评估结果与建议</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-card p-6 mb-6 card-hover-effect animate-slide-up" style="animation-delay: 0.2s">
+                <!-- 报告头 -->
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-dark mb-1">面试评估报告</h2>
+                        <p class="text-dark-light">职位类型: <span id="job-type-display">加载中...</span></p>
+                        <p class="text-dark-light">创建于 <span id="report-date">加载中...</span></p>
+                    </div>
+                    <div class="mt-4 md:mt-0 flex flex-wrap gap-3">
+                        <button id="download-report-btn" class="btn-effect px-4 py-2 bg-white border border-light-gray hover:bg-ultra-light text-dark font-medium rounded-lg transition-all flex items-center">
+                            <i class="fa fa-download mr-2"></i> 获取能力雷达图并下载报告
+                        </button>
+                        <button id="share-report-btn" class="btn-effect px-4 py-2 bg-white border border-light-gray hover:bg-ultra-light text-dark font-medium rounded-lg transition-all flex items-center">
+                            <i class="fa fa-share-alt mr-2"></i> 分享
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 总分卡片 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-ultra-light rounded-lg p-6 text-center card-hover-effect">
+                        <div class="score-circle-container">
+                            <!-- 环形进度条 SVG -->
+                            <svg class="w-32 h-32 mx-auto" viewBox="0 0 44 44">
+                                <circle cx="22" cy="22" r="16" fill="none" stroke="#C9CDD4" stroke-width="3" />
+                                <circle id="score-progress" cx="22" cy="22" r="16" fill="none" stroke="#165DFF" stroke-width="3" stroke-linecap="round" transform="rotate(-90 22 22)" stroke-dasharray="100" stroke-dashoffset="100" />
+                                <text id="total-score-text" x="22" y="25" text-anchor="middle" font-size="12" font-weight="bold" fill="#1D2129">0</text>
+                            </svg>
+                            <p id="overall-feedback" class="text-center mt-2 font-medium text-primary">暂无评分</p>
+                            <p class="text-sm text-dark-light">您的表现评估将显示在这里</p>
+                        </div>
+                    </div>
+
+                    <!-- 评分明细 -->
+                    <div class="bg-ultra-light rounded-lg p-6 col-span-2 card-hover-effect">
+                        <h3 class="text-lg font-medium text-dark mb-4">评分明细</h3>
+                        <div id="score-details">
+                            <p>暂无评分明细。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI综合评价 -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-medium text-dark mb-4">AI综合评价</h3>
+                    <div class="bg-ultra-light rounded-lg p-6 card-hover-effect" id="ai-analysis-content">
+                        <p>暂无 AI 综合评价。</p>
+                    </div>
+                    <!-- 关键亮点 -->
+                    <div class="mt-4 bg-ultra-light rounded-lg p-6 card-hover-effect">
+                        <h4 class="font-medium text-dark mb-2">关键亮点</h4>
+                        <div id="key-highlights">
+                            <p class="text-sm text-dark-light">暂无关键亮点数据。</p>
+                        </div>
+                    </div>
+                    <!-- 辅助多模态模型量化分数 -->
+                    <div class="mt-6 card-hover-effect">
+                        <h4 class="font-medium text-dark mb-2">辅助多模态模型量化分数</h4>
+                        <pre id="model-predictions-content" class="bg-light-gray p-3 rounded-md text-sm overflow-auto max-h-40 scrollbar-hide">暂无模型预测数据。</pre>
+                    </div>
+                </div>
+
+                <!-- AI分析与建议 -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-medium text-dark mb-4">AI分析与建议</h3>
+                    <div class="bg-ultra-light rounded-lg p-6 card-hover-effect" id="ai-analysis">
+                        <p class="text-dark-light">暂无AI分析与建议。</p>
+                    </div>
+                </div>
+
+                <!-- AI对话分析 -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-medium text-dark mb-4">AI对话分析</h3>
+                    <div class="bg-ultra-light rounded-lg p-6 flex flex-col space-y-4 max-h-60 overflow-y-auto scrollbar-hide card-hover-effect" id="conversation-analysis">
+                        <p>暂无 AI 对话分析。</p>
+                    </div>
+                    <div class="mt-4 flex items-center space-x-2">
+                        <input type="text" id="user-chat-input" class="flex-grow p-3 border border-light-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300" placeholder="与AI智能体对话..." aria-label="输入对话内容" />
+                        <button id="send-chat-btn" class="btn-effect px-4 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors">
+                            <i class="fa fa-send"></i> 发送
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 能力雷达图 -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-medium text-dark mb-4">能力雷达图</h3>
+                    <div class="bg-ultra-light rounded-lg p-6 flex justify-center items-center min-h-[300px] card-hover-effect" id="radar-chart-container">
+                        <div class="text-center">
+                            <div class="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-4"></div>
+                            <p>雷达图加载中...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="glass-effect border-t border-light-gray/30 mt-12 transition-all duration-300 hover:border-primary/20">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div class="flex items-center mb-4 md:mb-0 group">
+                    <i class="fa fa-robot text-primary text-2xl mr-2 transition-transform duration-300 group-hover:rotate-12"></i>
+                    <span class="text-xl font-bold text-primary transition-all duration-300 group-hover:text-accent">洞若观合 —— 多模态 AI 面试评测系统</span>
+                </div>
+                <div class="flex flex-wrap justify-center text-sm text-dark-light">
+                    <p>© 2025 洞若观合 —— 多模态 AI 面试评测系统 | SZIIT . 保留所有权利.</p>
+                    <div class="ml-4 space-x-4">
+                        <a href="#" class="hover:text-primary transition-colors duration-300 relative inline-block">
+                            隐私政策
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 hover:w-full"></span>
+                        </a>
+                        <a href="#" class="hover:text-primary transition-colors duration-300 relative inline-block">
+                            服务条款
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 hover:w-full"></span>
+                        </a>
+                        <a href="#" class="hover:text-primary transition-colors duration-300 relative inline-block">
+                            帮助中心
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 hover:w-full"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 通知提示框 -->
+    <div id="notification" class="fixed bottom-6 right-6 bg-dark text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 flex items-center z-50" role="alert">
+        <i id="notification-icon" class="fa fa-check-circle mr-2"></i>
+        <span id="notification-message">操作成功</span>
+    </div>
+
+    <!-- 引入外部 JS 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="ui/js/auth_check.js"></script>
+    <script src="js/reports.js"></script>
+</body>
+</html>

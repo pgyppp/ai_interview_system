@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>历史记录 - 洞若观合</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		<script>
+			tailwind.config = {
+				theme: {
+					extend: {
+						colors: {
+							primary: '#165DFF',
+							secondary: '#0FC6C2',
+							accent: '#722ED1',
+							dark: '#1D2129',
+							'dark-light': '#4E5969',
+							'light-gray': '#C9CDD4',
+							'ultra-light': '#F2F3F5'
+						},
+						fontFamily: {
+							inter: ['Inter', 'system-ui', 'sans-serif'],
+						},
+						boxShadow: {
+							'card': '0 4px 20px rgba(0, 0, 0, 0.08)',
+							'card-hover': '0 10px 30px rgba(22, 93, 255, 0.15)',
+							'float': '0 15px 35px rgba(22, 93, 255, 0.1)',
+							'glow': '0 0 15px rgba(22, 93, 255, 0.3)',
+						},
+						animation: {
+							'fade-in': 'fadeIn 0.5s ease-in-out',
+							'slide-up': 'slideUp 0.4s ease-out',
+							'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+							'float': 'float 6s ease-in-out infinite',
+							'float-delay': 'float 6s ease-in-out 2s infinite',
+							'float-slow': 'float 8s ease-in-out infinite',
+							'shine': 'shine 2s ease-in-out infinite',
+							'rotate-slow': 'rotate 20s linear infinite',
+							'gradient-flow': 'gradientFlow 8s ease infinite',
+						},
+						keyframes: {
+							fadeIn: {
+								'0%': { opacity: '0' },
+								'100%': { opacity: '1' },
+							},
+							slideUp: {
+								'0%': { transform: 'translateY(10px)', opacity: '0' },
+								'100%': { transform: 'translateY(0)', opacity: '1' },
+							},
+							float: {
+								'0%, 100%': { transform: 'translateY(0)' },
+								'50%': { transform: 'translateY(-15px)' },
+							},
+							shine: {
+								'0%, 100%': { opacity: 0.6 },
+								'50%': { opacity: 1 },
+							},
+							rotate: {
+								'0%': { transform: 'rotate(0deg)' },
+								'100%': { transform: 'rotate(360deg)' },
+							},
+							gradientFlow: {
+								'0%': { backgroundPosition: '0% 50%' },
+								'50%': { backgroundPosition: '100% 50%' },
+								'100%': { backgroundPosition: '0% 50%' },
+							}
+						}
+					},
+				}
+			}
+		</script>
+		<style type="text/tailwindcss">
+			@layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .bg-gradient-tech {
+                background: linear-gradient(135deg, #165DFF 0%, #722ED1 100%);
+                background-size: 200% 200%;
+                animation: gradientFlow 8s ease infinite;
+            }
+            .glass-effect {
+                backdrop-filter: blur(12px);
+                background-color: rgba(255, 255, 255, 0.8);
+            }
+            .bg-grid {
+                background-size: 40px 40px;
+                background-image: 
+                    linear-gradient(to right, rgba(22, 93, 255, 0.05) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(22, 93, 255, 0.05) 1px, transparent 1px);
+            }
+            .table-row-hover {
+                transition: all 0.3s ease;
+            }
+            .nav-item {
+                position: relative;
+                transition: all 0.3s ease;
+            }
+            .nav-item::after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                bottom: -4px;
+                left: 0;
+                background-color: theme('colors.primary');
+                transition: width 0.3s ease;
+            }
+            .nav-item:hover::after {
+                width: 100%;
+            }
+            .btn-effect {
+                transition: all 0.2s ease;
+                position: relative;
+                overflow: hidden;
+            }
+            .btn-effect::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 300%;
+                height: 300%;
+                background: rgba(255, 255, 255, 0.15);
+                transform: translate(-50%, -50%) rotate(45deg);
+                transition: all 0.75s ease;
+            }
+            .btn-effect:hover::before {
+                width: 0;
+                height: 0;
+            }
+            .bg-element {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(70px);
+                z-index: -1;
+                opacity: 0.2;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .error-shake {
+                animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            }
+            .user-profile-container {
+                cursor: pointer;
+                transition: transform 0.2s ease;
+            }
+            .user-profile-container:hover {
+                transform: translateY(-2px);
+            }
+            .history-timeline-marker {
+                position: relative;
+            }
+            .history-timeline-marker::before {
+                content: '';
+                position: absolute;
+                left: -30px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background-color: theme('colors.primary');
+                transition: all 0.3s ease;
+            }
+            .history-timeline-marker::after {
+                content: '';
+                position: absolute;
+                left: -26px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background-color: rgba(22, 93, 255, 0.1);
+                transition: all 0.3s ease;
+            }
+            .history-row:hover .history-timeline-marker::before {
+                box-shadow: 0 0 0 4px rgba(22, 93, 255, 0.2);
+            }
+            .history-row {
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+            .history-row::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 0;
+                background-color: rgba(22, 93, 255, 0.03);
+                transition: width 0.3s ease;
+            }
+            .history-row:hover::after {
+                width: 100%;
+            }
+            .floating-shape {
+                position: absolute;
+                border-radius: 50%;
+                background: linear-gradient(135deg, rgba(22, 93, 255, 0.1), rgba(114, 46, 209, 0.1));
+                z-index: -1;
+            }
+            .time-indicator {
+                position: relative;
+                display: inline-block;
+            }
+            .time-indicator::tooltip {
+                content: attr(data-time);
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: theme('colors.dark');
+                color: white;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
+                white-space: nowrap;
+            }
+            .time-indicator:hover::tooltip {
+                opacity: 1;
+            }
+            @keyframes shake {
+                10%, 90% { transform: translateX(-1px); }
+                20%, 80% { transform: translateX(2px); }
+                30%, 50%, 70% { transform: translateX(-3px); }
+                40%, 60% { transform: translateX(3px); }
+            }
+        }
+    </style>
+	</head>
+	<body class="font-inter bg-gradient-to-br from-ultra-light to-white min-h-screen flex flex-col animate-fade-in relative overflow-x-hidden">
+		<!-- 动态背景元素 -->
+		<div class="bg-element bg-primary w-[600px] h-[600px] top-[-300px] left-[-200px] animate-float"></div>
+		<!-- <div class="bg-element bg-accent w-[500px] h-[500px] bottom-[-250px] right-[-150px] animate-float-delay"></div> -->
+		
+		<!-- 浮动装饰形状 -->
+		<div class="floating-shape w-32 h-32 top-[15%] right-[20%] animate-float-slow"></div>
+		<div class="floating-shape w-24 h-24 bottom-[30%] left-[10%] animate-float"></div>
+		<div class="floating-shape w-16 h-16 top-[60%] right-[15%] animate-float-delay"></div>
+		
+		<!-- 装饰性网格背景 -->
+		<div class="fixed inset-0 bg-grid opacity-70 z-[-2]"></div>
+		
+		<!-- 时间线装饰元素 -->
+		<div class="fixed left-1/4 top-0 bottom-0 w-px bg-primary/10 z-[-1] hidden lg:block"></div>
+
+		<nav class="glass-effect shadow-sm sticky top-0 z-50 transition-all duration-300">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="flex justify-between h-16">
+					<div class="flex items-center">
+						<div class="flex-shrink-0 flex items-center group">
+							<i
+								class="fa fa-robot text-primary text-2xl mr-2 transition-transform duration-300 group-hover:rotate-12"></i>
+							<span
+								class="text-xl font-bold text-primary transition-all duration-300 group-hover:text-accent">洞若观合
+								—— 多模态 AI 面试评测系统</span>
+						</div>
+						<div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+							<a href="dashboard.html"
+								class="nav-item border-transparent text-dark-light hover:text-dark px-1 pt-1 inline-flex items-center text-sm font-medium">
+								<i class="fa fa-home mr-1"></i>
+								<span>首页</span>
+							</a>
+							<a href="interview.html"
+								class="nav-item border-transparent text-dark-light hover:text-dark px-1 pt-1 inline-flex items-center text-sm font-medium">
+								<i class="fa fa-video-camera mr-1"></i>
+								<span>面试评估</span>
+							</a>
+							<a href="reports.html"
+								class="nav-item border-transparent text-dark-light hover:text-dark px-1 pt-1 inline-flex items-center text-sm font-medium">
+								<i class="fa fa-file-text-o mr-1"></i>
+								<span>报告中心</span>
+							</a>
+							<a href="history.html"
+								class="nav-item text-primary px-1 pt-1 inline-flex items-center text-sm font-medium">
+								<i class="fa fa-history mr-1"></i>
+								<span>历史记录</span>
+							</a>
+						</div>
+					</div>
+					<div class="flex items-center">
+						<button type="button"
+							class="btn-effect p-2 rounded-full text-dark-light hover:text-primary hover:bg-primary/5 focus:outline-none relative transition-all duration-300">
+							<i class="fa fa-bell-o"></i>
+							<span class="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full animate-pulse"></span>
+						</button>
+						<!-- 用户信息区域 - 可点击跳转用户界面 -->
+						<div class="ml-4 user-profile-container" onclick="window.location.href='user-profile.html'">
+							<div class="flex items-center group">
+								<div
+									class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-white">
+									<i class="fa fa-user"></i>
+								</div>
+								<a href="user-profile.html"
+									class="ml-2 text-sm font-medium text-dark-light hidden sm:block transition-colors duration-300 group-hover:text-primary">用户信息</a>
+								<button type="button"
+									class="ml-1 p-2 rounded-full text-dark-light hover:text-primary hover:bg-primary/5 focus:outline-none transition-all duration-300">
+									<i class="fa fa-angle-down"></i>
+								</button>
+							</div>
+						</div>
+						<button type="button" id="mobile-menu-button"
+							class="ml-4 p-2 rounded-md text-dark-light hover:text-primary hover:bg-primary/5 focus:outline-none sm:hidden transition-all duration-300">
+							<i class="fa fa-bars"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- 移动端菜单 -->
+			<div id="mobile-menu" class="hidden sm:hidden bg-white shadow-md animate-fade-in">
+				<div class="px-2 pt-2 pb-3 space-y-1">
+					<a href="dashboard.html"
+						class="block px-3 py-2 rounded-md text-base font-medium text-dark-light hover:text-primary hover:bg-ultra-light transition-colors duration-300">
+						<i class="fa fa-tachometer mr-2"></i>仪表盘
+					</a>
+					<a href="interview.html"
+						class="block px-3 py-2 rounded-md text-base font-medium text-dark-light hover:text-primary hover:bg-ultra-light transition-colors duration-300">
+						<i class="fa fa-video-camera mr-2"></i>面试评估
+					</a>
+					<a href="reports.html"
+						class="block px-3 py-2 rounded-md text-base font-medium text-dark-light hover:text-primary hover:bg-ultra-light transition-colors duration-300">
+						<i class="fa fa-file-text-o mr-2"></i>报告中心
+					</a>
+					<a href="history.html"
+						class="block px-3 py-2 rounded-md text-base font-medium text-primary bg-primary/5">
+						<i class="fa fa-history mr-2"></i>历史记录
+					</a>
+					<!-- 移动端用户菜单 -->
+					<a href="user-profile.html"
+						class="block px-3 py-2 rounded-md text-base font-medium text-dark-light hover:text-primary hover:bg-ultra-light transition-colors duration-300">
+						<i class="fa fa-user-circle mr-2"></i>个人资料
+					</a>
+				</div>
+			</div>
+		</nav>
+
+		<main class="flex-grow relative">
+			<section id="history" class="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+				<div class="mb-8 animate-slide-up" style="animation-delay: 0.1s">
+					<h1 class="text-[clamp(1.5rem,3vw,2.2rem)] font-bold text-dark mb-2 text-shadow">历史记录</h1>
+					<p class="text-dark-light">查看您的面试历史和评估结果</p>
+				</div>
+
+				<div class="bg-white rounded-xl shadow-card p-6 transition-all duration-500 hover:shadow-card-hover animate-slide-up transform hover:-translate-y-1"
+					style="animation-delay: 0.2s">
+					<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+						<h2 class="text-xl font-bold text-dark">面试历史</h2>
+						<div class="mt-4 md:mt-0 flex flex-wrap gap-3">
+							<div class="relative group">
+								<input type="text" placeholder="搜索职位或类型..." id="search-input"
+									class="pl-10 pr-4 py-2 rounded-lg border border-light-gray focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all duration-300 group-hover:border-primary/50 w-full md:w-auto">
+								<span
+									class="absolute inset-y-0 left-0 flex items-center pl-3 text-light-gray transition-colors duration-300 group-hover:text-primary">
+									<i class="fa fa-search"></i>
+								</span>
+							</div>
+							<div class="relative group">
+								<select id="interview-type-filter"
+									class="pl-4 pr-10 py-2 rounded-lg border border-light-gray focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all duration-300 appearance-none bg-white group-hover:border-primary/50 w-full md:w-auto">
+									<option value="">全部类型</option>
+									<option value="technical">技术面试</option>
+									<option value="hr">HR面试</option>
+									<option value="behavioral">行为面试</option>
+									<option value="case">案例面试</option>
+									<option value="group">小组面试</option>
+								</select>
+								<span
+									class="absolute inset-y-0 right-0 flex items-center pr-3 text-light-gray pointer-events-none transition-colors duration-300 group-hover:text-primary">
+									<i class="fa fa-chevron-down"></i>
+								</span>
+							</div>
+							<div class="relative group">
+								<select id="time-filter"
+									class="pl-4 pr-10 py-2 rounded-lg border border-light-gray focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all duration-300 appearance-none bg-white group-hover:border-primary/50 w-full md:w-auto">
+									<option value="">全部时间</option>
+									<option value="today">今天</option>
+									<option value="week">本周</option>
+									<option value="month">本月</option>
+									<option value="year">今年</option>
+								</select>
+								<span
+									class="absolute inset-y-0 right-0 flex items-center pr-3 text-light-gray pointer-events-none transition-colors duration-300 group-hover:text-primary">
+									<i class="fa fa-chevron-down"></i>
+								</span>
+							</div>
+							
+							<!-- 新增：时间线视图切换按钮 -->
+							<div class="relative group">
+								<button id="timeline-view-toggle"
+									class="flex items-center px-4 py-2 rounded-lg border border-light-gray bg-white text-sm font-medium text-dark-light hover:bg-ultra-light hover:text-primary transition-all duration-300 group-hover:border-primary/50">
+									<i class="fa fa-clock-o mr-2"></i>
+									<span>时间线视图</span>
+								</button>
+							</div>
+						</div>
+					</div>
+
+					<!-- 错误提示区域 -->
+					<div id="error-message" class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg hidden">
+						<div class="flex items-center">
+							<i class="fa fa-exclamation-circle text-red-500 mr-2"></i>
+							<p class="text-sm text-red-700" id="error-text">加载数据时发生错误，请稍后重试</p>
+						</div>
+					</div>
+
+					<div class="overflow-x-auto scrollbar-hide">
+						<table class="min-w-full divide-y divide-light-gray">
+							<thead class="bg-ultra-light">
+								<tr>
+									<th scope="col"
+										class="px-6 py-3 text-left text-xs font-medium text-dark-light uppercase tracking-wider">
+										面试日期</th>
+									<th scope="col"
+										class="px-6 py-3 text-left text-xs font-medium text-dark-light uppercase tracking-wider">
+										面试类型</th>
+									<th scope="col"
+										class="px-6 py-3 text-left text-xs font-medium text-dark-light uppercase tracking-wider">
+										职位类型</th>
+									<th scope="col"
+										class="px-6 py-3 text-left text-xs font-medium text-dark-light uppercase tracking-wider">
+										总分</th>
+									<th scope="col"
+										class="px-6 py-3 text-left text-xs font-medium text-dark-light uppercase tracking-wider">
+										状态</th>
+									<th scope="col"
+										class="px-6 py-3 text-right text-xs font-medium text-dark-light uppercase tracking-wider">
+										操作</th>
+								</tr>
+							</thead>
+							<tbody class="bg-white divide-y divide-light-gray" id="interview-history">
+								<!-- 面试历史记录将通过JavaScript动态生成 -->
+								<tr class="animate-pulse-slow">
+									<td colspan="6" class="px-6 py-12 text-center text-dark-light">
+										<div class="flex flex-col items-center justify-center">
+											<div
+												class="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4">
+											</div>
+											<p>正在加载历史记录...</p>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					
+					<!-- 时间线视图（默认隐藏） -->
+					<div id="timeline-view" class="hidden mt-6 border-t border-light-gray pt-6">
+						<div class="relative pl-8 lg:pl-0">
+							<!-- 时间线内容将通过JavaScript动态生成 -->
+							<div class="animate-pulse-slow py-8">
+								<div class="flex flex-col items-center justify-center">
+									<div class="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4"></div>
+									<p class="text-dark-light">正在加载时间线...</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="mt-8 flex items-center justify-between">
+						<div class="flex-1 flex justify-between sm:hidden">
+							<button id="mobile-prev-page"
+								class="btn-effect relative inline-flex items-center px-4 py-2 border border-light-gray bg-white text-sm font-medium rounded-md text-dark-light hover:bg-ultra-light hover:text-primary transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+								disabled>
+								上一页
+							</button>
+							<button id="mobile-next-page"
+								class="btn-effect ml-3 relative inline-flex items-center px-4 py-2 border border-light-gray bg-white text-sm font-medium rounded-md text-dark-light hover:bg-ultra-light hover:text-primary transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+								disabled>
+								下一页
+							</button>
+						</div>
+						<div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+							<div>
+								<p class="text-sm text-dark-light">
+									显示第 <span class="font-medium" id="start-record">0</span> 到 <span class="font-medium"
+										id="end-record">0</span> 条，共 <span class="font-medium"
+										id="total-records">0</span> 条记录
+								</p>
+							</div>
+							<div>
+								<nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+									<button id="prev-page"
+										class="btn-effect relative inline-flex items-center px-2 py-2 rounded-l-md border border-light-gray bg-white text-sm font-medium text-dark-light hover:bg-ultra-light hover:text-primary transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+										disabled>
+										<span class="sr-only">上一页</span>
+										<i class="fa fa-chevron-left text-xs"></i>
+									</button>
+									<div id="pagination-container" class="flex">
+										<!-- 分页按钮将通过JavaScript动态生成 -->
+									</div>
+									<button id="next-page"
+										class="btn-effect relative inline-flex items-center px-2 py-2 rounded-r-md border border-light-gray bg-white text-sm font-medium text-dark-light hover:bg-ultra-light hover:text-primary transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+										disabled>
+										<span class="sr-only">下一页</span>
+										<i class="fa fa-chevron-right text-xs"></i>
+									</button>
+								</nav>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- 新增：历史统计卡片 -->
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+					<div class="bg-white rounded-xl shadow-card p-6 transition-all duration-300 hover:shadow-card-hover transform hover:-translate-y-1 animate-slide-up" style="animation-delay: 0.3s">
+						<div class="flex items-center justify-between">
+							<div>
+								<p class="text-dark-light text-sm">总面试次数</p>
+								<h3 class="text-2xl font-bold text-dark mt-1" id="total-interviews">0</h3>
+							</div>
+							<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+								<i class="fa fa-calendar-check-o text-xl"></i>
+							</div>
+						</div>
+						<div class="mt-4 flex items-center">
+							<span class="text-green-500 text-sm flex items-center">
+								<i class="fa fa-arrow-up mr-1"></i> 12%
+							</span>
+							<span class="text-dark-light text-sm ml-2">较上月</span>
+						</div>
+					</div>
+					
+					<div class="bg-white rounded-xl shadow-card p-6 transition-all duration-300 hover:shadow-card-hover transform hover:-translate-y-1 animate-slide-up" style="animation-delay: 0.4s">
+						<div class="flex items-center justify-between">
+							<div>
+								<p class="text-dark-light text-sm">平均得分</p>
+								<h3 class="text-2xl font-bold text-dark mt-1" id="average-score">0</h3>
+							</div>
+							<div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+								<i class="fa fa-star text-xl"></i>
+							</div>
+						</div>
+						<div class="mt-4 flex items-center">
+							<span class="text-green-500 text-sm flex items-center">
+								<i class="fa fa-arrow-up mr-1"></i> 5%
+							</span>
+							<span class="text-dark-light text-sm ml-2">较上月</span>
+						</div>
+					</div>
+					
+					<div class="bg-white rounded-xl shadow-card p-6 transition-all duration-300 hover:shadow-card-hover transform hover:-translate-y-1 animate-slide-up" style="animation-delay: 0.5s">
+						<div class="flex items-center justify-between">
+							<div>
+								<p class="text-dark-light text-sm">最高得分</p>
+								<h3 class="text-2xl font-bold text-dark mt-1" id="highest-score">0</h3>
+							</div>
+							<div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center text-accent">
+								<i class="fa fa-trophy text-xl"></i>
+							</div>
+						</div>
+						<div class="mt-4 flex items-center">
+							<span class="text-dark-light text-sm">
+								<i class="fa fa-calendar mr-1"></i> <span id="highest-score-date">-</span>
+							</span>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<footer
+			class="glass-effect border-t border-light-gray/30 mt-12 transition-all duration-300 hover:border-primary/20">
+			<div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+				<div class="flex flex-col md:flex-row md:items-center md:justify-between">
+					<div class="flex items-center mb-4 md:mb-0 group">
+						<i
+							class="fa fa-robot text-primary text-2xl mr-2 transition-transform duration-300 group-hover:rotate-12"></i>
+						<span
+							class="text-xl font-bold text-primary transition-all duration-300 group-hover:text-accent">洞若观合
+							—— 多模态 AI 面试评测系统</span>
+					</div>
+					<div class="flex flex-wrap justify-center text-sm text-dark-light">
+						<p>© 2025 洞若观合 —— 多模态 AI 面试评测系统 | SZIIT . 保留所有权利.</p>
+						<div class="ml-4 space-x-4">
+							<a href="#" class="hover:text-primary transition-colors duration-300 relative inline-block">
+								隐私政策
+								<span
+									class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 hover:w-full"></span>
+							</a>
+							<a href="#" class="hover:text-primary transition-colors duration-300 relative inline-block">
+								服务条款
+								<span
+									class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 hover:w-full"></span>
+							</a>
+							<a href="#" class="hover:text-primary transition-colors duration-300 relative inline-block">
+								帮助中心
+								<span
+									class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 hover:w-full"></span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+		<!-- 无记录状态提示 -->
+		<div id="no-records"
+			class="fixed inset-0 bg-dark/50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+			<div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 shadow-lg animate-slide-up">
+				<div class="text-center">
+					<div class="w-16 h-16 bg-ultra-light rounded-full flex items-center justify-center mx-auto mb-4">
+						<i class="fa fa-search text-2xl text-light-gray"></i>
+					</div>
+					<h3 class="text-lg font-bold text-dark mb-2">未找到记录</h3>
+					<p class="text-dark-light mb-6">没有符合当前筛选条件的面试记录</p>
+					<button id="reset-filters"
+						class="btn-effect bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-all duration-300">
+						重置筛选条件
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<script src="/ui/js/auth_check.js"></script>
+		<script src="js/history.js"></script>
+	</body>
+</html>

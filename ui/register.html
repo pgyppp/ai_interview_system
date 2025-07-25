@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>注册 - AI面试评估系统</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					colors: {
+						primary: '#165DFF',
+						secondary: '#0FC6C2',
+						accent: '#722ED1',
+						dark: '#1D2129',
+						'dark-light': '#4E5969',
+						'light-gray': '#C9CDD4',
+						'ultra-light': '#F2F3F5'
+					},
+					fontFamily: {
+						inter: ['Inter', 'system-ui', 'sans-serif'],
+					},
+					boxShadow: {
+						'card': '0 4px 20px rgba(0, 0, 0, 0.08)',
+						'card-hover': '0 10px 30px rgba(22, 93, 255, 0.12)',
+					}
+				},
+			}
+		}
+	</script>
+	<style type="text/tailwindcss">
+		@layer utilities {
+			.content-auto {
+				content-visibility: auto;
+			}
+			.text-shadow {
+				text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			}
+			.bg-gradient-tech {
+				background: linear-gradient(135deg, #165DFF 0%, #722ED1 100%);
+			}
+			.clip-path-slant {
+				clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+			}
+			.animate-pulse-slow {
+				animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+			}
+			.glass-effect {
+				backdrop-filter: blur(12px);
+				background-color: rgba(255, 255, 255, 0.8);
+			}
+		}
+	</style>
+</head>
+<body class="font-inter bg-ultra-light text-dark min-h-screen flex flex-col">
+	<div id="register-page" class="min-h-screen flex items-center justify-center bg-gradient-tech clip-path-slant">
+		<div
+			class="w-full max-w-md p-8 bg-white rounded-2xl shadow-card transform transition-all duration-500 hover:shadow-card-hover">
+			<div class="text-center mb-8">
+				<h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-primary mb-2">创建账户</h2>
+				<p class="text-dark-light">开始使用AI面试评估系统</p>
+			</div>
+			<form id="register-form" class="space-y-5">
+				<div>
+					<label for="register-name" class="block text-sm font-medium text-dark-light mb-1">姓名</label>
+					<div class="relative">
+						<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-light-gray">
+							<i class="fa fa-user-o"></i>
+						</span>
+						<input type="text" id="register-name"
+							class="w-full pl-10 pr-4 py-3 rounded-lg border border-light-gray focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all"
+							placeholder="输入您的姓名">
+					</div>
+				</div>
+				<div>
+					<label for="register-email" class="block text-sm font-medium text-dark-light mb-1">邮箱</label>
+					<div class="relative">
+						<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-light-gray">
+							<i class="fa fa-envelope-o"></i>
+						</span>
+						<input type="email" id="register-email"
+							class="w-full pl-10 pr-4 py-3 rounded-lg border border-light-gray focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all"
+							placeholder="example@company.com">
+					</div>
+				</div>
+				<div>
+					<label for="register-password" class="block text-sm font-medium text-dark-light mb-1">密码</label>
+					<div class="relative">
+						<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-light-gray">
+							<i class="fa fa-lock"></i>
+						</span>
+						<input type="password" id="register-password"
+							class="w-full pl-10 pr-4 py-3 rounded-lg border border-light-gray focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all"
+							placeholder="至少8个字符">
+					</div>
+				</div>
+				<div>
+					<label for="register-confirm-password"
+						class="block text-sm font-medium text-dark-light mb-1">确认密码</label>
+					<div class="relative">
+						<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-light-gray">
+							<i class="fa fa-lock"></i>
+						</span>
+						<input type="password" id="register-confirm-password"
+							class="w-full pl-10 pr-4 py-3 rounded-lg border border-light-gray focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all"
+							placeholder="再次输入密码">
+					</div>
+				</div>
+				<div>
+					<label for="register-verification-code" class="block text-sm font-medium text-dark-light mb-1">验证码</label>
+					<div class="relative flex">
+						<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-light-gray">
+							<i class="fa fa-shield"></i>
+						</span>
+						<input type="text" id="register-verification-code"
+							class="w-full pl-10 pr-4 py-3 rounded-lg border border-light-gray focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all"
+							placeholder="输入验证码">
+						<button type="button" id="send-verification-code"
+							class="ml-2 px-4 py-2 bg-secondary text-white rounded-lg hover:bg-secondary/90 focus:outline-none focus:ring-2 focus:ring-secondary/30 text-sm">
+							发送验证码
+						</button>
+					</div>
+				</div>
+				<button type="submit"
+					class="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3 px-4 rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-primary/30">
+					注册
+				</button>
+				<div class="text-center">
+					<p class="text-sm text-dark-light">
+						已有账号? <a href="index.html" id="login-link"
+							class="font-medium text-primary hover:text-primary/80 transition-colors">返回登录</a>
+					</p>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script src="js/register.js"></script>
+</body>
+</html>

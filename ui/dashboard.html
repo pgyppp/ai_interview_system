@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>洞若观合 —— 多模态 AI 面试评测系统 </title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+		<script>
+			tailwind.config = {
+				theme: {
+					extend: {
+						colors: {
+							primary: '#165DFF',
+							secondary: '#0FC6C2',
+							accent: '#722ED1',
+							dark: '#1D2129',
+							'dark-light': '#4E5969',
+							'light-gray': '#C9CDD4',
+							'ultra-light': '#F2F3F5',
+							'neutral-50': '#F9FAFB',
+							'neutral-100': '#F3F4F6',
+							'neutral-200': '#E5E7EB',
+						},
+						fontFamily: {
+							inter: ['Inter', 'system-ui', 'sans-serif'],
+						},
+						boxShadow: {
+							'card': '0 4px 20px rgba(0, 0, 0, 0.08)',
+							'card-hover': '0 15px 35px rgba(22, 93, 255, 0.15)',
+							'elevation-1': '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)',
+							'elevation-2': '0 3px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12)',
+							'elevation-3': '0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.10)',
+						},
+						animation: {
+							'fade-in': 'fadeIn 0.6s ease-in-out',
+							'slide-up': 'slideUp 0.6s ease-out',
+							'slide-in-right': 'slideInRight 0.6s ease-out',
+							'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+							'bounce-slow': 'bounce 3s infinite',
+							'scale': 'scale 0.4s ease-in-out',
+							'progress': 'progress 1.8s ease-out forwards',
+							'float': 'float 10s ease-in-out infinite',
+							'float-fast': 'float 7s ease-in-out infinite',
+							'float-slow': 'float 12s ease-in-out infinite',
+							'shine': 'shine 2.5s infinite',
+							'rotate-slow': 'rotate 25s linear infinite',
+							'pulse-soft': 'pulseSoft 5s infinite',
+							'gradient': 'gradient 8s ease infinite',
+							'grid-move': 'gridMove 15s linear infinite',
+						},
+						keyframes: {
+							fadeIn: {
+								'0%': {
+									opacity: '0'
+								},
+								'100%': {
+									opacity: '1'
+								}
+							},
+							slideUp: {
+								'0%': {
+									transform: 'translateY(30px)',
+									opacity: '0'
+								},
+								'100%': {
+									transform: 'translateY(0)',
+									opacity: '1'
+								}
+							},
+							slideInRight: {
+								'0%': {
+									transform: 'translateX(30px)',
+									opacity: '0'
+								},
+								'100%': {
+									transform: 'translateX(0)',
+									opacity: '1'
+								}
+							},
+							scale: {
+								'0%, 100%': {
+									transform: 'scale(1)'
+								},
+								'50%': {
+									transform: 'scale(1.08)'
+								}
+							},
+							progress: {
+								'0%': {
+									width: '0%'
+								},
+								'100%': {
+									width: '100%'
+								}
+							},
+							float: {
+								'0%, 100%': {
+									transform: 'translateY(0) translateX(0)'
+								},
+								'25%': {
+									transform: 'translateY(-20px) translateX(15px)'
+								},
+								'75%': {
+									transform: 'translateY(15px) translateX(-20px)'
+								}
+							},
+							shine: {
+								'0%, 100%': {
+									opacity: 0.2
+								},
+								'50%': {
+									opacity: 0.7
+								}
+							},
+							rotate: {
+								'0%': {
+									transform: 'rotate(0deg)'
+								},
+								'100%': {
+									transform: 'rotate(360deg)'
+								}
+							},
+							pulseSoft: {
+								'0%, 100%': {
+									opacity: 0.15
+								},
+								'50%': {
+									opacity: 0.4
+								}
+							},
+							gradient: {
+								'0%, 100%': {
+									backgroundPosition: '0% 50%'
+								},
+								'50%': {
+									backgroundPosition: '100% 50%'
+								}
+							},
+							gridMove: {
+								'0%': {
+									backgroundPosition: '0 0'
+								},
+								'100%': {
+									backgroundPosition: '40px 40px'
+								}
+							}
+						}
+					},
+				}
+			}
+		</script>
+		<style type="text/tailwindcss">
+			@layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            }
+            .text-gradient {
+                background-clip: text;
+                -webkit-background-clip: text;
+                color: transparent;
+                background-image: linear-gradient(135deg, #165DFF 0%, #722ED1 100%);
+                background-size: 200% auto;
+                animation: gradient 8s ease infinite;
+            }
+            .bg-gradient-tech {
+                background: linear-gradient(135deg, #165DFF 0%, #722ED1 100%);
+                background-size: 200% auto;
+                animation: gradient 8s ease infinite;
+            }
+            .clip-path-slant {
+                clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            }
+            .glass-effect {
+                backdrop-filter: blur(16px);
+                background-color: rgba(255, 255, 255, 0.75);
+            }
+            .scroll-reveal {
+                opacity: 0;
+                transform: translateY(30px);
+                transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .scroll-reveal.active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .hover-lift {
+                transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .hover-lift:hover {
+                transform: translateY(-8px);
+            }
+            .nav-link {
+                position: relative;
+                transition: color 0.3s ease;
+            }
+            .nav-link::after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                bottom: -2px;
+                left: 0;
+                background-color: #165DFF;
+                transition: width 0.3s ease;
+            }
+            .nav-link:hover::after {
+                width: 100%;
+            }
+            .pulse-dot {
+                position: relative;
+            }
+            .pulse-dot::before {
+                content: '';
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: #165DFF;
+                animation: pulse 1.5s infinite;
+            }
+            @keyframes pulse {
+                0% {
+                    transform: scale(0.95);
+                    box-shadow: 0 0 0 0 rgba(22, 93, 255, 0.7);
+                }
+                70% {
+                    transform: scale(1);
+                    box-shadow: 0 0 0 10px rgba(22, 93, 255, 0);
+                }
+                100% {
+                    transform: scale(0.95);
+                    box-shadow: 0 0 0 0 rgba(22, 93, 255, 0);
+                }
+            }
+            .bg-pattern {
+                background-image: 
+                    radial-gradient(rgba(22, 93, 255, 0.12) 1px, transparent 1px),
+                    radial-gradient(rgba(114, 46, 209, 0.08) 1px, transparent 1px),
+                    linear-gradient(to right, transparent, rgba(255,255,255,0.5) 50%, transparent);
+                background-size: 50px 50px, 30px 30px, 100% 1px;
+                background-position: 0 0, 15px 15px, 0 0;
+                background-repeat: repeat, repeat, repeat-y;
+            }
+            .bg-glass {
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                transition: all 0.5s ease;
+            }
+            .bg-glass:hover {
+                background: rgba(255, 255, 255, 0.85);
+                border-color: rgba(255, 255, 255, 0.3);
+            }
+            .decorative-element {
+                border-radius: 50%;
+                filter: blur(150px);
+                position: absolute;
+                z-index: 0;
+            }
+            .grid-pattern {
+                background-size: 40px 40px;
+                background-image: 
+                    linear-gradient(to right, rgba(22, 93, 255, 0.05) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(22, 93, 255, 0.05) 1px, transparent 1px);
+                background-position: 0 0;
+                background-repeat: repeat;
+                animation: gridMove 15s linear infinite;
+            }
+            .feature-icon {
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .feature-card:hover .feature-icon {
+                transform: scale(1.15) rotate(5deg);
+            }
+            .btn-primary {
+                position: relative;
+                overflow: hidden;
+                z-index: 1;
+            }
+            .btn-primary::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+                transition: 0.6s;
+                z-index: -1;
+            }
+            .btn-primary:hover::before {
+                left: 100%;
+            }
+            .footer-spacer {
+                height: 120px;
+            }
+            .text-balance {
+                text-wrap: balance;
+            }
+            .noise-bg {
+                position: relative;
+            }
+            .noise-bg::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0.03;
+                pointer-events: none;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            }
+        }
+    </style>
+	</head>
+	<body class="font-inter bg-neutral-50 text-dark min-h-screen relative overflow-x-hidden noise-bg">
+		<!-- 渐变背景层 -->
+		<div class="absolute inset-0 bg-gradient-to-br from-neutral-50 via-white to-primary/5 z-0"></div>
+
+		<!-- 动态网格背景 -->
+		<div class="grid-pattern absolute inset-0 opacity-60 z-0"></div>
+
+		<!-- 装饰性背景元素 - 增强深度感和动态效果 -->
+		<div class="decorative-element bg-primary/30 w-[600px] h-[600px] top-[-300px] -left-[200px] animate-float-slow">
+		</div>
+		<div class="decorative-element bg-accent/20 w-[500px] h-[500px] bottom-6200px] right-[-150px] animate-float">
+		</div>
+		<div class="decorative-element bg-secondary/25 w-[400px] h-[400px] top-[30%] right-[20%] animate-float-fast">
+		</div>
+		<div class="decorative-element bg-primary/15 w-[300px] h-[300px] bottom-[10%] left-[15%] animate-rotate-slow">
+		</div>
+
+		<!-- 背景图案覆盖 -->
+		<div class="bg-pattern absolute inset-0 opacity-80 z-0"></div>
+
+		<!-- 导航栏 -->
+		<nav class="bg-glass shadow-elevation-1 sticky top-0 z-50 transition-all duration-500" id="main-nav">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="flex justify-between h-16">
+					<div class="flex items-center">
+						<div class="flex-shrink-0 flex items-center animate-fade-in">
+							<i
+								class="fa fa-robot text-primary text-2xl mr-2 transition-transform duration-500 hover:rotate-12"></i>
+							<span class="text-xl font-bold text-primary">洞若观合 —— 多模态 AI 面试评测系统 </span>
+						</div>
+						<div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+							<a href=""
+								class="nav-link border-primary text-dark border-b-2 px-1 pt-1 inline-flex items-center text-sm font-medium animate-slide-in-right"
+								style="animation-delay: 0.1s">
+								<i class="fa fa-home mr-1"></i>
+								<span>首页</span>
+							</a>
+							<a href="/ui/interview.html"
+								class="nav-link border-transparent text-dark-light hover:text-dark hover:border-light-gray border-b-2 px-1 pt-1 inline-flex items-center text-sm font-medium animate-slide-in-right"
+								style="animation-delay: 0.2s">
+								<i class="fa fa-video-camera mr-1"></i>
+								<span>面试评估</span>
+							</a>
+							<a href="/ui/reports.html"
+								class="nav-link border-transparent text-dark-light hover:text-dark hover:border-light-gray border-b-2 px-1 pt-1 inline-flex items-center text-sm font-medium animate-slide-in-right"
+								style="animation-delay: 0.3s">
+								<i class="fa fa-file-text-o mr-1"></i>
+								<span>报告中心</span>
+							</a>
+							<a href="/ui/history.html"
+								class="nav-link border-transparent text-dark-light hover:text-dark hover:border-light-gray border-b-2 px-1 pt-1 inline-flex items-center text-sm font-medium animate-slide-in-right"
+								style="animation-delay: 0.4s">
+								<i class="fa fa-history mr-1"></i>
+								<span>历史记录</span>
+							</a>
+						</div>
+					</div>
+					<div class="flex items-center animate-slide-in-right" style="animation-delay: 0.5s">
+						<div class="flex items-center group">
+							<div
+								class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary transition-transform duration-300 group-hover:scale-110">
+								<i class="fa fa-user"></i>
+							</div>
+							<a href="/ui/user-profile.html"
+								class="ml-2 text-sm font-medium text-dark-light hidden sm:block transition-colors duration-300 group-hover:text-primary">用户信息</a>
+							<button type="button"
+								class="ml-1 p-2 rounded-full text-dark-light hover:text-dark hover:bg-ultra-light/80 focus:outline-none transition-transform duration-300 group-hover:rotate-180">
+								<i class="fa fa-angle-down"></i>
+							</button>
+						</div>
+						<button type="button"
+							class="ml-4 p-2 rounded-md text-dark-light hover:text-dark hover:bg-ultra-light/80 focus:outline-none sm:hidden transition-all duration-300">
+							<i class="fa fa-bars"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</nav>
+
+		<!-- 主要内容区域 -->
+		<main class="relative z-10 pb-8">
+			<!-- 英雄区域 -->
+			<section class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+				<div class="flex flex-col lg:flex-row items-center gap-12">
+					<div class="lg:w-1/2 space-y-6 scroll-reveal">
+						<div
+							class="inline-block px-4 py-1.5 bg-primary/10 text-primary text-sm font-medium rounded-full mb-2 animate-fade-in">
+							智能招聘新体验
+						</div>
+						<h1 class="text-[clamp(2.2rem,5vw,3.8rem)] font-bold leading-tight text-dark">
+							洞若观合 — <br />
+							<span class="text-gradient"> 多模态 AI 面试</span>系统
+						</h1>
+						<p class="text-lg text-dark-light max-w-lg leading-relaxed text-balance">
+							基于多模态技术的智能面试评测系统，深度融合语音、文本、图像等多维度数据，以实现对候选人面试表现的精准分析。
+						</p>
+						<div class="flex flex-wrap gap-4 pt-4">
+							<a href="interview.html"
+								class="btn-primary px-8 py-3.5 bg-primary text-white rounded-lg font-medium shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-1 transition-all duration-300 flex items-center">
+								<i class="fa fa-play-circle mr-2"></i>
+								开始面试评估
+							</a>
+							<a href="#features"
+								class="px-8 py-3.5 bg-white text-primary border border-primary/20 rounded-lg font-medium hover:bg-primary/5 hover:-translate-y-1 transition-all duration-300 flex items-center">
+								<i class="fa fa-info-circle mr-2"></i>
+								了解更多
+							</a>
+						</div>
+						<div class="flex items-center gap-6 pt-6">
+							<div class="flex -space-x-2">
+								<img src="https://picsum.photos/seed/user1/40/40" alt="用户头像"
+									class="w-10 h-10 rounded-full border-2 border-white hover:z-10 transition-all duration-300">
+								<img src="https://picsum.photos/seed/user2/40/40" alt="用户头像"
+									class="w-10 h-10 rounded-full border-2 border-white hover:z-10 transition-all duration-300">
+								<img src="https://picsum.photos/seed/user3/40/40" alt="用户头像"
+									class="w-10 h-10 rounded-full border-2 border-white hover:z-10 transition-all duration-300">
+								<img src="https://picsum.photos/seed/user4/40/40" alt="用户头像"
+									class="w-10 h-10 rounded-full border-2 border-white hover:z-10 transition-all duration-300">
+								<div
+									class="w-10 h-10 rounded-full border-2 border-white bg-primary/10 flex items-center justify-center text-primary text-xs font-medium hover:z-10 transition-all duration-300">
+									10+
+								</div>
+							</div>
+							<!--                        <div>
+                            <div class="flex items-center text-yellow-400 mb-1">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-half-o"></i>
+                                <span class="ml-2 text-dark-light text-sm">4.8/5</span>
+                            </div>
+                            <p class="text-sm text-dark-light">来自500+企业的信任</p>
+                        </div> -->
+						</div>
+					</div>
+					<div class="lg:w-1/2 relative scroll-reveal">
+						<div class="relative z-10 rounded-2xl overflow-hidden shadow-elevation-3 animate-float">
+							<img src="../img/微信图片_20250723154822.webp" alt="AI面试评估系统演示"
+								class="w-full h-auto transform transition-transform duration-700 hover:scale-105">
+							<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+								<div class="p-6 text-white">
+									<p class="font-medium">实时面试评估演示</p>
+									<p class="text-sm text-white/80">AI自动分析回答内容与表达方式</p>
+								</div>
+							</div>
+						</div>
+						<!-- 装饰元素增强立体感 -->
+						<div
+							class="absolute -bottom-6 -left-6 w-32 h-32 bg-secondary/20 rounded-full filter blur-xl z-0">
+						</div>
+						<div class="absolute -top-6 -right-6 w-32 h-32 bg-primary/20 rounded-full filter blur-xl z-0">
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- 核心功能 -->
+			<section id="features" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+				<div class="text-center max-w-3xl mx-auto mb-16 scroll-reveal">
+					<div
+						class="inline-block px-4 py-1.5 bg-primary/10 text-primary text-sm font-medium rounded-full mb-4">
+						核心功能
+					</div>
+					<h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-dark mb-4">强大功能，智能评估</h2>
+					<p class="text-lg text-dark-light">我们的AI面试评估系统提供全方位的面试解决方案，让招聘更高效、更精准</p>
+				</div>
+
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+					<!-- 功能卡片1 -->
+					<div class="bg-glass rounded-xl shadow-card p-6 feature-card hover-lift scroll-reveal"
+						style="transition-delay: 0.1s">
+						<div
+							class="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6 feature-icon">
+							<i class="fa fa-comments-o text-2xl"></i>
+						</div>
+						<h3 class="text-xl font-bold text-dark mb-3">智能问答分析</h3>
+						<p class="text-dark-light">AI自动分析候选人回答内容，评估其专业知识、表达能力和逻辑思维，提供客观评分。</p>
+					</div>
+
+					<!-- 功能卡片2 -->
+					<div class="bg-glass rounded-xl shadow-card p-6 feature-card hover-lift scroll-reveal"
+						style="transition-delay: 0.2s">
+						<div
+							class="h-14 w-14 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary mb-6 feature-icon">
+							<i class="fa fa-video-camera text-2xl"></i>
+						</div>
+						<h3 class="text-xl font-bold text-dark mb-3">视频面试评估</h3>
+						<p class="text-dark-light">实时分析候选人的面部表情、肢体语言和语音语调，全面评估沟通能力和心理素质。</p>
+					</div>
+
+					<!-- 功能卡片3 -->
+					<div class="bg-glass rounded-xl shadow-card p-6 feature-card hover-lift scroll-reveal"
+						style="transition-delay: 0.3s">
+						<div
+							class="h-14 w-14 rounded-xl bg-accent/10 flex items-center justify-center text-accent mb-6 feature-icon">
+							<i class="fa fa-file-text-o text-2xl"></i>
+						</div>
+						<h3 class="text-xl font-bold text-dark mb-3">自动生成报告</h3>
+						<p class="text-dark-light">系统自动生成详细评估报告，包括各项能力得分、优势分析和改进建议，支持导出分享。</p>
+					</div>
+
+					<!-- 功能卡片4 -->
+					<div class="bg-glass rounded-xl shadow-card p-6 feature-card hover-lift scroll-reveal"
+						style="transition-delay: 0.4s">
+						<div
+							class="h-14 w-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6 feature-icon">
+							<i class="fa fa-users text-2xl"></i>
+						</div>
+						<h3 class="text-xl font-bold text-dark mb-3">团队协作评估</h3>
+						<p class="text-dark-light">支持多人同时评估同一候选人，汇总不同面试官的评分和意见，避免主观偏差。</p>
+					</div>
+
+					<!-- 功能卡片5 -->
+					<div class="bg-glass rounded-xl shadow-card p-6 feature-card hover-lift scroll-reveal"
+						style="transition-delay: 0.5s">
+						<div
+							class="h-14 w-14 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary mb-6 feature-icon">
+							<i class="fa fa-database text-2xl"></i>
+						</div>
+						<h3 class="text-xl font-bold text-dark mb-3">候选人库管理</h3>
+						<p class="text-dark-light">建立候选人数据库，记录历史面试表现，支持快速检索和比较，便于人才储备和二次招聘。</p>
+					</div>
+
+					<!-- 功能卡片6 -->
+					<div class="bg-glass rounded-xl shadow-card p-6 feature-card hover-lift scroll-reveal"
+						style="transition-delay: 0.6s">
+						<div
+							class="h-14 w-14 rounded-xl bg-accent/10 flex items-center justify-center text-accent mb-6 feature-icon">
+							<i class="fa fa-line-chart text-2xl"></i>
+						</div>
+						<h3 class="text-xl font-bold text-dark mb-3">招聘数据分析</h3>
+						<p class="text-dark-light">分析招聘流程各环节数据，优化面试效率，降低招聘成本，提高人才质量和留存率。</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- 数据统计与图表 -->
+			<section class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+				<div class="bg-glass rounded-2xl shadow-card p-8 md:p-12 scroll-reveal">
+					<div class="text-center max-w-3xl mx-auto mb-12">
+						<div
+							class="inline-block px-4 py-1.5 bg-primary/10 text-primary text-sm font-medium rounded-full mb-4">
+							数据表现
+						</div>
+						<h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-dark mb-4">提升招聘效率</h2>
+						<p class="text-lg text-dark-light">使用我们的AI面试评估系统，企业可以显著提升招聘效率，降低成本</p>
+					</div>
+
+					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+						<div class="text-center">
+							<p class="text-4xl md:text-5xl font-bold text-primary mb-2" id="efficiency-improvement">78%
+							</p>
+							<p class="text-dark-light">招聘效率提升</p>
+						</div>
+						<div class="text-center">
+							<p class="text-4xl md:text-5xl font-bold text-primary mb-2" id="time-reduction">65%</p>
+							<p class="text-dark-light">时间成本减少</p>
+						</div>
+						<div class="text-center">
+							<p class="text-4xl md:text-5xl font-bold text-primary mb-2" id="quality-improvement">42%</p>
+							<p class="text-dark-light">人才质量提升</p>
+						</div>
+						<div class="text-center">
+							<p class="text-4xl md:text-5xl font-bold text-primary mb-2" id="cost-reduction">35%</p>
+							<p class="text-dark-light">招聘成本降低</p>
+						</div>
+					</div>
+
+					<!-- 图表展示 -->
+					<div class="h-80 bg-white/50 rounded-xl p-4 shadow-inner">
+						<canvas id="recruitmentChart"></canvas>
+					</div>
+				</div>
+			</section>
+
+			<!-- 行动号召 -->
+			<section class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+				<div
+					class="bg-gradient-tech rounded-2xl shadow-elevation-3 overflow-hidden relative z-10 scroll-reveal">
+					<div class="absolute inset-0 opacity-10">
+						<div class="grid-pattern absolute inset-0"></div>
+					</div>
+					<div class="relative z-10 p-8 md:p-12 lg:p-16 text-center text-white">
+						<h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold mb-6">准备好提升您的招聘流程了吗？</h2>
+						<p class="text-lg text-white/80 max-w-2xl mx-auto mb-8 text-balance">
+							立即开始使用AI面试评估系统，体验智能、高效、客观的招聘新方式
+						</p>
+						<div class="flex flex-wrap justify-center gap-4">
+							<a href="interview.html"
+								class="btn-primary px-8 py-3.5 bg-white text-primary rounded-lg font-medium shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center">
+								<i class="fa fa-rocket mr-2"></i>
+								免费使用
+							</a>
+							<a href="#"
+								class="px-8 py-3.5 bg-transparent text-white border border-white/30 rounded-lg font-medium hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 flex items-center">
+								<i class="fa fa-calendar-check-o mr-2"></i>
+								预约演示
+							</a>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- 底部栏占位元素 -->
+			<div class="footer-spacer"></div>
+		</main>
+
+		<!-- 底部栏 -->
+		<footer
+			class="bg-glass border-t border-light-gray/30 scroll-reveal relative z-50 fixed bottom-0 left-0 right-0 py-6">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="flex flex-col md:flex-row md:items-center md:justify-between">
+					<div class="flex items-center mb-4 md:mb-0">
+						<i
+							class="fa fa-robot text-primary text-2xl mr-2 transition-transform duration-300 hover:rotate-12"></i>
+						<span class="text-xl font-bold text-primary">AI面试评估系统</span>
+					</div>
+					<div class="flex flex-wrap justify-center text-sm text-dark-light">
+						<p>© 2025 AI面试评估系统. 保留所有权利.</p>
+						<div class="ml-4 space-x-6">
+							<a href="#" class="hover:text-primary transition-colors duration-300">隐私政策</a>
+							<a href="#" class="hover:text-primary transition-colors duration-300">服务条款</a>
+							<a href="#" class="hover:text-primary transition-colors duration-300">帮助中心</a>
+							<a href="#" class="hover:text-primary transition-colors duration-300">联系我们</a>
+						</div>
+					</div>
+				</div>
+				<div class="mt-4 pt-4 border-t border-light-gray/20 text-center text-sm text-dark-light">
+					本系统采用先进AI技术，确保面试评估的公平性与客观性
+				</div>
+			</div>
+		</footer>
+
+		<script src="/ui/js/auth_check.js"></script>
+		<script src="/ui/js/dashboard.js"></script>
+	</body>
+</html>
