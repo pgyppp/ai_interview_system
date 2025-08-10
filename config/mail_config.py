@@ -5,13 +5,10 @@ MAIL_CONFIG = {
     'MAIL_PORT': 465,  # SMTP端口（QQ邮箱推荐使用465）
     'MAIL_USE_SSL': True,  # 必须使用SSL连接
     'MAIL_USE_TLS': False,
-    'MAIL_USERNAME': '3073183297@qq.com',  # 发件人邮箱
+    'MAIL_USERNAME': 'Your email@qq.com',  # 发件人邮箱
     'MAIL_PASSWORD': 'xdpxqdzbhiradeci', 
-    # 'MAIL_USERNAME': '2352739306@qq.com',  # 发件人邮箱
-    # 'MAIL_PASSWORD': 'fqfjbkajxapodibd',
-    # 请访问 https://service.mail.qq.com/detail/0/53 获取新的授权码
     # 获取新授权码后，请将上面的旧授权码替换为新的授权码
-    'MAIL_DEFAULT_SENDER': '3073183297@qq.com',  # 默认发件人
+    'MAIL_DEFAULT_SENDER': 'Your email@qq.com',  # 默认发件人
     'MAIL_DEBUG': True,
     
     # 额外配置（用于EmailService类）
